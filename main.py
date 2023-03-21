@@ -13,10 +13,6 @@ from pymongo import MongoClient
 # Load Env
 load_dotenv()
 
-# Configuration
-
-users_file = "users.json"
-
 # Flask Configuration
 SESSION_COOKIE_NAME = 'wrld'
 SESSION_TYPE = 'filesystem'
