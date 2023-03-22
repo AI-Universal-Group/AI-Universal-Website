@@ -1,14 +1,16 @@
-# Sort the imports
+'''
+Copyright (c) Zach Lagden 2023
+'''
 import hashlib
 import os
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import Flask, jsonify, make_response, request, session, url_for, render_template, redirect
+from flask import Flask, jsonify, make_response, request, session, render_template, redirect
 from flask_minify import Minify
 from flask_restful import Api, Resource
-from flask_session import Session
 from pymongo import MongoClient
+from flask_session import Session
 
 # Load Env
 load_dotenv()
@@ -40,8 +42,15 @@ users_collection = db["users"]
 
 # The UserManagement is a class that inherits from the Resource class.
 class UserManagment(Resource):
-    # The get method returns information about the current logged in user, if logged in, otherwise returns a 401 error.
+    '''
+    API endpoint for user db managegment 
+    '''
+    # The get method returns information about the current logged in user
+    # if logged in, otherwise returns a 401 error.
     def get(self):
+        '''
+        The get function for the UserManagement endpoint.
+        '''
         if 'user' not in session:
             return make_response(jsonify({
                 "ok": False,
@@ -65,8 +74,13 @@ class UserManagment(Resource):
             "data": user_data_to_return
         })
 
-    # The post method receives a username, password and logout parameters in the headers. It either logs out user from session or creates/verifies username/password and adds it to the users' file.
+    # The post method receives a username, password and logout parameters in the headers.
+    # It either logs out user from session or creates/verifies
+    # username/password and adds it to the users' file.
     def post(self):
+        '''
+        The post function for the UserManagement endpoint.
+        '''
         username = request.headers.get("username")
         password = request.headers.get("password")
         logout = request.headers.get("logout")
@@ -79,7 +93,7 @@ class UserManagment(Resource):
                     "message": "Logged out."
                 }), 200)
 
-        elif (not username or not password) and not logout:
+        if (not username or not password) and not logout:
             return make_response(jsonify({
                 "ok": False,
                 "code": 400,
@@ -112,6 +126,9 @@ class UserManagment(Resource):
 
     # The put method receives a username and password and adds this new user to the users' file after checking unique entry.
     def put(self):
+        '''
+        The put function for the UserManagement endpoint.
+        '''
         username = request.headers.get("username")
         password = request.headers.get("password")
         phone_number = request.headers.get("phone_number")
@@ -169,6 +186,9 @@ class UserManagment(Resource):
 
     # The following function updates the information of a user including their username and password
     def patch(self):
+        '''
+        The patch function for the UserManagement endpoint.
+        '''
         # Checks whether the session is associated with a user.
         if 'user' in session:
             uid = session['user']['uuid'] # Gets the unique identifier from session data for the user.
@@ -226,6 +246,9 @@ class UserManagment(Resource):
 
     # The following function deletes the user data from the system.
     def delete(self):
+        '''
+        The delete function for the UserManagement endpoint.
+        '''
         if 'user' in session:
             print(session)
             uid = session['user']['uuid'] # Acquiring the UUID of the user if they are logged in & have an existing session.
