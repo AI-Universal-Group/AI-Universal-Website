@@ -1,7 +1,12 @@
-on: push
-name: pylinter
+on: [push, pull_request]
+
 jobs:
-  lint:
+  python-lint:
     runs-on: ubuntu-latest
+    name: CI workflow
     steps:
-      - uses: programmingwithalex/pylinter@v1.4.3
+    - name: checkout source repo
+      uses: actions/checkout@main
+
+    - name: linting
+      uses: programmingwithalex/pylinter@main
