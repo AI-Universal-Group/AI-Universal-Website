@@ -38,8 +38,10 @@ Minify(app=app, html=True, js=True, cssless=True)
 
 # MongoDB Configuration
 client = MongoClient(os.getenv("mongodb"))
-db = client["mydatabase"]
-users_collection = db["users"]
+user_data_db = client["user_data"]
+users_collection = user_data_db["users"]
+settings_collection = user_data_db["settings"]
+user_information_collection = user_data_db["user_information"]
 
 # Api
 
@@ -375,8 +377,16 @@ def login():
     """
     if request.method == "POST":
         # Grab username and password from POST form data
-        email = request.form.get("email")
-        password = request.form.get("password")
+        email = request.form.get("email").strip().lower()
+        password = request.form.get("password").strip()
+
+        if (email or password) == "":
+            return render_template(
+                "pages/login.html",
+                error=True,
+                message="Fields cannot be left blank",
+                fields=(email, password),
+            )
 
         # Hashes the password with SHA256 algorithm
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -394,8 +404,12 @@ def login():
         )
 
         if not found_user:
-            error = "Could not find an account with that username"
-            return render_template("pages/login.html", error=error)
+            return render_template(
+                "pages/login.html",
+                error=True,
+                message="Email or password incorrect.",
+                fields=(email, password),
+            )
 
         # Store the found user in the session
         session["user"] = {
