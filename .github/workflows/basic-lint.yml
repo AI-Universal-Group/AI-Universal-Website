@@ -1,8 +1,7 @@
 on: push
-name: Lint Python
+name: pylinter
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: cclauss/Find-Python-syntax-errors-action@master
+      - uses: programmingwithalex/pylinter@v1.4.3
