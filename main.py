@@ -1,5 +1,6 @@
 """
 Copyright (c) Zach Lagden 2023
+All Rights Reserved.
 """
 import hashlib
 import os
@@ -19,6 +20,7 @@ from flask_minify import Minify
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 from flask_session import Session
+from flask_socketio import SocketIO
 
 # Load Env
 load_dotenv()
@@ -35,6 +37,7 @@ app.config.from_object(__name__)
 Session(app)
 api = Api(app)
 Minify(app=app, html=True, js=True, cssless=True)
+socketio = SocketIO(app)
 
 # MongoDB Configuration
 client = MongoClient(os.getenv("mongodb"))
@@ -347,6 +350,14 @@ class UserManagment(Resource):
         )
 
 
+# SocketIO Routess
+
+
+@socketio.on("connect")
+def handle_message(data):
+    print("received message: " + data)
+
+
 # Website
 
 
@@ -439,4 +450,4 @@ def signup():
 api.add_resource(UserManagment, "/api/v1/user")
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5000)
+    socketio.run(app, debug=False, port=5000)

@@ -13,3 +13,8 @@ function $buo_f() {
 
 document.addEventListener("DOMContentLoaded", $buo_f, false);
 window.addEventListener('load', $buo_f);
+
+var socket = io();
+socket.on('connect', function () {
+    socket.emit('connect', { data: 'Successfully connected.' });
+});
