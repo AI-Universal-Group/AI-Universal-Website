@@ -350,7 +350,7 @@ def connect(prompt):
         "formatted": str(message_response),
     }
 
-    socketio.emit("ai-output", output["formatted"])
+    socketio.emit("ai-output", output["formatted"], room=request.sid)
 
 
 @app.route("/")
