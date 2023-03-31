@@ -3,60 +3,60 @@ Copyright (c) Zach Lagden 2023
 All Rights Reserved.
 """
 import hashlib
+import json
 import os
 
+import openai
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from flask import (
     Flask,
     jsonify,
     make_response,
+    redirect,
+    render_template,
     request,
     session,
-    render_template,
-    redirect,
 )
 from flask_minify import Minify
 from flask_restful import Api, Resource
-from pymongo import MongoClient
-from flask_session import Session
 from flask_socketio import SocketIO
+from pymongo import MongoClient
+from werkzeug.debug import DebuggedApplication
 
-# Load Env
+from flask_session import Session
+
 load_dotenv()
 
-# Flask Configuration
 SESSION_COOKIE_NAME = "wrld"
 SESSION_TYPE = "filesystem"
+GPT_PROMPTS_FOLDER = "prompts"
 
-# Init Flask
+openai.api_key = "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"
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# Init Flask Extensions
+app.debug = True
+app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
+
 Session(app)
 api = Api(app)
 Minify(app=app, html=True, js=True, cssless=True)
 socketio = SocketIO(app)
 
-# MongoDB Configuration
 client = MongoClient(os.getenv("mongodb"))
 user_data_db = client["user_data"]
 users_collection = user_data_db["users"]
 settings_collection = user_data_db["settings"]
 user_information_collection = user_data_db["user_information"]
 
-# Api
 
-
-# The UserManagement is a class that inherits from the Resource class.
 class UserManagment(Resource):
     """
     API endpoint for user db managegment
     """
 
-    # The get method returns information about the current logged in user
-    # if logged in, otherwise returns a 401 error.
     def get(self):
         """
         The get function for the UserManagement endpoint.
@@ -66,7 +66,6 @@ class UserManagment(Resource):
                 jsonify({"ok": False, "code": 401, "error": "401 Unauthorized"}), 401
             )
 
-        # Use the username to retrieve the user from the users collection in MongoDB
         found_user = users_collection.find_one(
             {"username": session["user"]["username"]}
         )
@@ -80,9 +79,6 @@ class UserManagment(Resource):
 
         return jsonify({"ok": True, "code": 200, "data": user_data_to_return})
 
-    # The post method receives a username, password and logout parameters in the headers.
-    # It either logs out user from session or creates/verifies
-    # username/password and adds it to the users' file.
     def post(self):
         """
         The post function for the UserManagement endpoint.
@@ -109,11 +105,8 @@ class UserManagment(Resource):
                 400,
             )
 
-        # Hashes the password with SHA256 algorithm
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        # Find the user with matching username and hashed password
-        # Using the `find_one()` method of the `users_collection`
         found_user = users_collection.find_one(
             {"username": username, "password": hashed_password}
         )
@@ -130,15 +123,12 @@ class UserManagment(Resource):
                 401,
             )
 
-        # Store the found user in the session
         session["user"] = {
             "uuid": str(found_user["_id"]),
             "username": found_user["username"],
         }
         return jsonify({"ok": True, "code": 200, "data": session["user"]})
 
-    # The put method receives a username and password and adds this
-    # new user to the users' file after checking unique entry.
     def put(self):
         """
         The put function for the UserManagement endpoint.
@@ -148,10 +138,8 @@ class UserManagment(Resource):
         phone_number = request.headers.get("phone_number")
         email = request.headers.get("email")
 
-        # Hashes the password with SHA256 algorithm.
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        # check whether username already exists in the database
         existing_user = users_collection.find_one({"username": username})
         if existing_user:
             return make_response(
@@ -165,7 +153,6 @@ class UserManagment(Resource):
                 409,
             )
 
-        # check whether email already exists in the database
         existing_user = users_collection.find_one({"email": email})
         if existing_user:
             return make_response(
@@ -179,7 +166,6 @@ class UserManagment(Resource):
                 409,
             )
 
-        # check whether phone number already exists in the database
         existing_user = users_collection.find_one({"phone_number": phone_number})
         if existing_user:
             return make_response(
@@ -193,7 +179,6 @@ class UserManagment(Resource):
                 409,
             )
 
-        # Create a new user document with the given username and hashed password
         new_user = {
             "username": username,
             "password": hashed_password,
@@ -201,12 +186,9 @@ class UserManagment(Resource):
             "email": email,
         }
 
-        # Insert the new document into the users collection
-        # And store the assigned `_id` in the session.
         result = users_collection.insert_one(new_user)
         session["user"] = {"uuid": str(result.inserted_id), "username": username}
 
-        # Return success message with created user credentials.
         return make_response(
             jsonify(
                 {
@@ -218,28 +200,17 @@ class UserManagment(Resource):
             201,
         )
 
-    # The following function updates the information of a user including their username and password
     def patch(self):
         """
         The patch function for the UserManagement endpoint.
         """
-        # Checks whether the session is associated with a user.
-        if "user" in session:
-            uid = session["user"][
-                "uuid"
-            ]  # Gets the unique identifier from session data for the user.
-            current_password = request.headers.get(
-                "password"
-            )  # Fetches the user's current password from the header.
-            new_username = request.headers.get(
-                "new_username"
-            )  # Fetches the updated username, if provided, from the header.
-            new_password = request.headers.get(
-                "new_password"
-            )  # Fetches the updated password, if provided, from the header.
 
-            # Error handling, if either the new username or
-            # password entered are empty or not provided.
+        if "user" in session:
+            uid = session["user"]["uuid"]
+            current_password = request.headers.get("password")
+            new_username = request.headers.get("new_username")
+            new_password = request.headers.get("new_password")
+
             if not any([new_username, new_password]):
                 return make_response(
                     jsonify(
@@ -265,16 +236,10 @@ class UserManagment(Resource):
                     400,
                 )
 
-            user_info = users_collection.find_one(
-                {"_id": ObjectId(uid)}
-            )  # Gets the particular user info using the UID.
-            stored_password = user_info[
-                "password"
-            ]  # Fetches the user's saved password from user_info.
+            user_info = users_collection.find_one({"_id": ObjectId(uid)})
+            stored_password = user_info["password"]
 
-            # Authentication check -- If the user has entered the correct current password.
             if hashlib.sha256(current_password.encode()).hexdigest() == stored_password:
-                # Updates the user's information if new values are provided.
                 if new_username is not None and len(new_username) > 0:
                     users_collection.update_one(
                         {"_id": ObjectId(uid)}, {"$set": {"username": new_username}}
@@ -290,11 +255,8 @@ class UserManagment(Resource):
                             }
                         },
                     )
-                session["user"][
-                    "username"
-                ] = new_username  # Update the username inside the session object.
-                # Return success message if all the above conditions are
-                # met & changes have been made successfully
+                session["user"]["username"] = new_username
+
                 return make_response(
                     jsonify(
                         {
@@ -305,8 +267,7 @@ class UserManagment(Resource):
                     ),
                     200,
                 )
-            # Return failure message if the given credentials
-            # don't match the saved user information.
+
             return make_response(
                 jsonify(
                     {
@@ -317,48 +278,79 @@ class UserManagment(Resource):
                 ),
                 401,
             )
-        # Return error message if no active session is detected.
+
         return make_response(
             jsonify({"ok": False, "code": 401, "error": "Unauthorized"}), 401
         )
 
-    # The following function deletes the user data from the system.
     def delete(self):
         """
         The delete function for the UserManagement endpoint.
         """
         if "user" in session:
             print(session)
-            uid = session["user"][
-                "uuid"
-            ]  # Acquiring the UUID of the user if they are logged in & have an existing session.
-            users_collection.delete_one(
-                {"_id": ObjectId(uid)}
-            )  # Removes the user entry corresponding to the given UUID.
+            uid = session["user"]["uuid"]
+            users_collection.delete_one({"_id": ObjectId(uid)})
 
-            session.pop("user", None)  # Destroys the active session.
-            # Returns JSON response indicating successful deletion.
+            session.pop("user", None)
+
             return make_response(
                 jsonify(
                     {"ok": True, "code": 200, "message": "User deleted successfully."}
                 ),
                 200,
             )
-        # Returns error message if no active session is detected.
+
         return make_response(
             jsonify({"ok": False, "code": 401, "error": "Unauthorized"}), 401
         )
 
 
-# SocketIO Routess
+@socketio.on("client-connect")
+def client_connect(data):
+    print("Connected to client: " + data["id"])
 
 
-@socketio.on("connect")
-def handle_message(data):
-    print("received message: " + data)
+@socketio.on("ai-prompt")
+def connect(prompt):
+    with open(
+        os.path.abspath(os.path.join(GPT_PROMPTS_FOLDER, "Language GPT Model.json"))
+    ) as f:
+        message_data = json.loads(f.read())
+        f.close()
 
+    messages = [
+        {"role": "system", "content": message_data["system"]},
+    ]
 
-# Website
+    for msg in message_data["training"]:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+
+    messages.append(
+        {
+            "role": "user",
+            "content": f"Provide an answer for the following prompt:\n{prompt}",
+        }
+    )
+
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+
+    choice = response["choices"][0]  # first choice
+    if choice["finish_reason"] != "stop":
+        return False, Exception(
+            f"Gpt Stop Error- {choice['finish_reason']} - Gpt stopped while generating your response, this is usually a one time thing so please try again."
+        )
+
+    elif choice["finish_reason"] == "stop":
+        message_response = choice["message"]["content"]
+
+    output = {
+        "id": response["id"],
+        "raw": message_response,
+        "formatted": str(message_response),
+    }
+
+    socketio.emit("ai-output", output["formatted"])
 
 
 @app.route("/")
@@ -369,7 +361,6 @@ def index():
     if "user" not in session:
         return render_template("pages/home.html", user=None)
 
-    # Use the username to retrieve the user from the users collection in MongoDB
     found_user = users_collection.find_one({"username": session["user"]["username"]})
 
     user_data = {
@@ -387,7 +378,6 @@ def login():
     Login endpoint for the website frontend.
     """
     if request.method == "POST":
-        # Grab username and password from POST form data
         email = request.form.get("email").strip().lower()
         password = request.form.get("password").strip()
 
@@ -399,17 +389,12 @@ def login():
                 fields=(email, password),
             )
 
-        # Hashes the password with SHA256 algorithm
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        # Find the user with matching username and hashed password
-        # Using the `find_one()` method of the `users_collection`
         found_user = users_collection.find_one(
             {"username": email, "password": hashed_password}
         )
 
-        # Find the user with matching email and hashed password
-        # Using the `find_one()` method of the `users_collection`
         found_user = users_collection.find_one(
             {"email": email, "password": hashed_password}
         )
@@ -422,7 +407,6 @@ def login():
                 fields=(email, password),
             )
 
-        # Store the found user in the session
         session["user"] = {
             "uuid": str(found_user["_id"]),
             "username": found_user["username"],
@@ -447,7 +431,31 @@ def signup():
     return redirect("/")
 
 
+@app.route("/ai")
+def ai():
+    """
+    Test Ai endpoint for the website frontend.
+    """
+    if "user" not in session:
+        return render_template("pages/ai.html", user=None)
+
+    found_user = users_collection.find_one({"username": session["user"]["username"]})
+
+    user_data = {
+        "uuid": str(found_user["_id"]),
+        "username": found_user["username"],
+        "email": found_user["email"],
+        "phone_number": found_user["phone_number"],
+    }
+
+    return render_template(
+        "pages/ai.html",
+        user=user_data,
+        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
+    )
+
+
 api.add_resource(UserManagment, "/api/v1/user")
 
 if __name__ == "__main__":
-    socketio.run(app, debug=False, port=5000)
+    socketio.run(app, debug=True, port=5000)

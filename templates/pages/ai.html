@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Prompt</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"
+        integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+</head>
+
+<body class="bg-gray-800">
+    <!-- navigation bar -->
+    <nav class="bg-gray-900 text-gray-300 p-2 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="logo.png" alt="Logo" class="h-10 mr-4" />
+            <ul class="flex">
+                <li class="mr-4"><a href="#" class="hover:text-white">Home</a></li>
+                <li class="mr-4"><a href="#" class="hover:text-white">News</a></li>
+                <li class="mr-4"><a href="#" class="hover:text-white">Contact</a></li>
+                <li class="mr-4"><a href="#" class="hover:text-white">About</a></li>
+            </ul>
+        </div>
+        <div>
+            {% if user == None %}
+            <!-- Sign-in button when user is not logged in -->
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onclick="location.href='/login'">
+                Sign In
+            </button>
+            {% else %}
+            <!-- User account data when user is logged in -->
+            <div class="p-2 border rounded-lg inline-block mr-3 w-full md:w-auto text-center md:text-left">
+                {{ user_data["credits"] }} Credits
+            </div>
+            <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onclick="location.href='#'">
+                Account
+            </button>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container mx-auto flex flex-col lg:flex-row h-screen">
+        <div class="w-full lg:w-1/2 bg-gray-950 flex flex-col justify-center items-center">
+            <!-- AI Prompt Title -->
+            <h1 class="text-3xl font-bold mb-6 text-white">AI Prompt</h1>
+
+            <!-- ai prompt form -->
+            <form id="ai-prompt-form" action="#" method="post" class="p-6 mb-4 w-full max-w-md">
+                <!-- prompt input -->
+                <div class="mb-4">
+                    <label for="prompt-input" class="block text-gray-400 font-bold mb-2">
+                        Enter Prompt
+                    </label>
+                    <input type="text" name="prompt-input" id="prompt-input" placeholder="Type prompt here..." required
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200" />
+                </div>
+
+                <!-- submit button -->
+                <div class="flex items-center justify-between">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Submit
+                    </button>
+                </div>
+            </form>
+
+            <!-- loading spinner -->
+            <div id="loading-spinner"
+                class="hidden flex justify-center items-center mt-2 bg-gray-100 rounded-full w-10 h-10 mb-4">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+            </div>
+
+            <!-- ai output display -->
+            <div id="ai-output" class="p-6 flex-1"></div>
+        </div>
+
+        <!-- space for advertisements, latest news on other ai models -->
+        <div class="w-full lg:w-1/2 bg-gray-800">
+            <div class="p-4 rounded-lg mb-4 bg-gray-700" style="height: 33.3%">
+                <h2 class="text-lg font-medium mb-2 text-white">Advertisement Space</h2>
+                <p class="text-white">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
+                    voluptatem modi quos exercitationem fugit necessitatibus, praesentium
+                    provident fugiat enim.
+                </p>
+            </div>
+            <div class="p-4 rounded-lg mb-4 bg-gray-700" style="height: 33.3%">
+                <h2 class="text-lg font-medium mb-2 text-white">Latest News on AI Models</h2>
+                <ul>
+                    <li class="mb-2"><a href="#" class="hover:text-white">AI model A now available!</a></li>
+                    <li class="mb-2"><a href="#" class="hover:text-white">Update on AI model B</a></li>
+                    <li class="mb-2"><a href="#" class="hover:text-white">New features added to AI model C</a></li>
+                </ul>
+            </div>
+            <div class="p-4 rounded-lg bg-gray-700" style="height: 33.3%">
+                <h2 class="text-lg font-medium mb-2 text-white">Account Information</h2>
+                {% if user == None %}
+                <p class="text-white">Please sign in to view your credits and subscription data</p>
+                {% else %}
+                <p class="text-white">Credits: {{ user_data["credits"] }}</p>
+                <p class="text-white">Subscription Data: {{ user_data["subscription_data"] }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

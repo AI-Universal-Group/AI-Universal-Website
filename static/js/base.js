@@ -5,16 +5,20 @@ const $buoop = {
     api: 2023.03,
 };
 
-function $buo_f() {
-    const e = document.createElement("script");
-    e.src = "//browser-update.org/update.min.js";
-    document.body.appendChild(e);
+function loadBrowserUpdateScript() {
+    const browserUpdateScript = document.createElement("script");
+    browserUpdateScript.src = "//browser-update.org/update.min.js";
+    document.body.appendChild(browserUpdateScript);
 }
 
-document.addEventListener("DOMContentLoaded", $buo_f, false);
-window.addEventListener('load', $buo_f);
+document.addEventListener("DOMContentLoaded", loadBrowserUpdateScript, false);
+window.addEventListener('load', loadBrowserUpdateScript);
 
-var socket = io();
+const socket = io();
 socket.on('connect', function () {
-    socket.emit('connect', { data: 'Successfully connected.' });
+    console.log('Connected to server.');
+    console.log(`Socket Id: ${socket.id}`);
+    socket.emit('client-connect', {
+        id: socket.id
+    });
 });
