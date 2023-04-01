@@ -1,10 +1,13 @@
-import os
 import hashlib
+import os
 
 from bson.objectid import ObjectId
+from dotenv import load_dotenv
 from flask import session
 from flask_restful import Resource, reqparse
 from pymongo import MongoClient
+
+load_dotenv()
 
 client = MongoClient(os.getenv("mongodb"), connect=False)
 user_data_db = client["user_data"]
