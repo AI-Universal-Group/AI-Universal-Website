@@ -32,7 +32,7 @@ SESSION_COOKIE_NAME = "wrld"
 SESSION_TYPE = "filesystem"
 GPT_PROMPTS_FOLDER = "prompts"
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 app = Flask(__name__)
 app.config.from_object(__name__)
