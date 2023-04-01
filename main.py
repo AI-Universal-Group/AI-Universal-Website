@@ -3,6 +3,7 @@ Copyright (c) Zach Lagden 2023
 All Rights Reserved.
 """
 import os
+import json
 
 import openai
 from dotenv import load_dotenv
@@ -50,6 +51,53 @@ user_data_db = client["user_data"]
 users_collection = user_data_db["users"]
 settings_collection = user_data_db["settings"]
 user_information_collection = user_data_db["user_information"]
+
+
+@socketio.on("client-connect")
+def handle_client_connect(data):
+    print(f"Client connected: {data['id']}")
+
+
+@socketio.on("ai-prompt")
+def handle_ai_prompt(prompt):
+    with open(
+        os.path.abspath(os.path.join(GPT_PROMPTS_FOLDER, "Language GPT Model.json"))
+    ) as f:
+        message_data = json.loads(f.read())
+        f.close()
+
+    messages = [
+        {"role": "system", "content": message_data["system"]},
+    ]
+
+    for msg in message_data["training"]:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+
+    messages.append(
+        {
+            "role": "user",
+            "content": f"Provide a response for the following message:\n{prompt}",
+        }
+    )
+
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+
+    choice = response["choices"][0]  # first choice
+    if choice["finish_reason"] != "stop":
+        return False, Exception(
+            f"Gpt Stop Error- {choice['finish_reason']} - Gpt stopped while generating your response, this is usually a one time thing so please try again."
+        )
+
+    elif choice["finish_reason"] == "stop":
+        message_response = choice["message"]["content"]
+
+    output = {
+        "id": response["id"],
+        "raw": message_response,
+        "formatted": str(message_response),
+    }
+
+    socketio.emit("ai-output", output["formatted"], room=request.sid)
 
 
 @app.route("/signup")
