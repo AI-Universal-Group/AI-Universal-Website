@@ -4,6 +4,9 @@ flask_session/*
 main/__pycache__
 
 
+#windows
+desktop.ini
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
