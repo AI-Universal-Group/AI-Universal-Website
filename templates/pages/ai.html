@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <title>AI Prompt</title>
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
         integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -19,9 +19,9 @@
 
 <body class="bg-gray-800">
     <!-- navigation bar -->
-    <nav class="bg-gray-900 text-gray-300 p-2 flex justify-between items-center">
+    <nav class="bg-gray-900 text-gray-300 p-4 flex justify-between items-center">
         <div class="flex items-center">
-            <img src="logo.png" alt="Logo" class="h-10 mr-4" />
+            <img src="{{ url_for() }}" alt="Logo" class="h-10 mr-4" />
             <ul class="flex">
                 <li class="mr-4"><a href="#" class="hover:text-white">Home</a></li>
                 <li class="mr-4"><a href="#" class="hover:text-white">News</a></li>
@@ -51,15 +51,15 @@
         </div>
     </nav>
 
-    <div class="container mx-auto flex flex-col lg:flex-row h-screen">
-        <div class="w-full lg:w-1/2 bg-gray-950 flex flex-col justify-center items-center">
+    <div class="container mx-auto flex flex-col lg:flex-col">
+        <div class="w-full bg-gray-950 flex flex-col justify-center items-center">
             <!-- AI Prompt Title -->
-            <h1 class="text-3xl font-bold mb-6 text-white">AI Prompt</h1>
+            <h1 class="text-xl md:text-3xl font-bold mb-2 md:mb-6 text-white">AI Prompt</h1>
 
             <!-- ai prompt form -->
-            <form id="ai-prompt-form" action="#" method="post" class="p-6 mb-4 w-full max-w-md">
+            <form id="ai-prompt-form" action="#" method="post" class="p-2 md:p-6 mb-2 md:mb-4 w-full max-w-md">
                 <!-- prompt input -->
-                <div class="mb-4">
+                <div class="mb-2 md:mb-4">
                     <label for="prompt-input" class="block text-gray-400 font-bold mb-2">
                         Enter Prompt
                     </label>
@@ -68,7 +68,7 @@
                 </div>
 
                 <!-- submit button -->
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-end md:justify-between">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Submit
@@ -78,17 +78,17 @@
 
             <!-- loading spinner -->
             <div id="loading-spinner"
-                class="hidden flex justify-center items-center mt-2 bg-gray-100 rounded-full w-10 h-10 mb-4">
+                class="hidden flex justify-center items-center mt-2 bg-gray-100 rounded-full w-10 h-10 mb-2 md:mb-4">
                 <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
             </div>
 
             <!-- ai output display -->
-            <div id="ai-output" class="p-6 flex-1"></div>
+            <div id="ai-output" class="p-2 md:p-6 flex-1"></div>
         </div>
 
         <!-- space for advertisements, latest news on other ai models -->
-        <div class="w-full lg:w-1/2 bg-gray-800">
-            <div class="p-4 rounded-lg mb-4 bg-gray-700" style="height: 33.3%">
+        <div class="w-full bg-gray-800">
+            <div class="p-4 rounded-lg mb-2 md:mb-4 bg-gray-700">
                 <h2 class="text-lg font-medium mb-2 text-white">Advertisement Space</h2>
                 <p class="text-white">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
@@ -96,7 +96,7 @@
                     provident fugiat enim.
                 </p>
             </div>
-            <div class="p-4 rounded-lg mb-4 bg-gray-700" style="height: 33.3%">
+            <div class="p-4 rounded-lg mb-2 md:mb-4 bg-gray-700">
                 <h2 class="text-lg font-medium mb-2 text-white">Latest News on AI Models</h2>
                 <ul>
                     <li class="mb-2"><a href="#" class="hover:text-white">AI model A now available!</a></li>
@@ -104,7 +104,7 @@
                     <li class="mb-2"><a href="#" class="hover:text-white">New features added to AI model C</a></li>
                 </ul>
             </div>
-            <div class="p-4 rounded-lg bg-gray-700" style="height: 33.3%">
+            <div class="p-4 rounded-lg bg-gray-700">
                 <h2 class="text-lg font-medium mb-2 text-white">Account Information</h2>
                 {% if user == None %}
                 <p class="text-white">Please sign in to view your credits and subscription data</p>
