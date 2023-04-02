@@ -2,11 +2,13 @@
 Copyright (c) Zach Lagden 2023
 All Rights Reserved.
 """
-import os
+import hashlib
 import json
+import os
 
 import openai
 from dotenv import load_dotenv
+from endpoints import users
 from flask import (
     Flask,
     jsonify,
@@ -24,7 +26,7 @@ from werkzeug.debug import DebuggedApplication
 
 from flask_session import Session
 
-from endpoints import users
+# * Initialize Flask/Flask Extensions and Configurations
 
 load_dotenv()
 
@@ -46,11 +48,15 @@ api = Api(app)
 Minify(app=app, html=True, js=True, cssless=True)
 socketio = SocketIO(app)
 
+# * Initialize MongoDB Connection
+
 client = MongoClient(os.getenv("mongodb"), connect=False)
 user_data_db = client["user_data"]
 users_collection = user_data_db["users"]
 settings_collection = user_data_db["settings"]
 user_information_collection = user_data_db["user_information"]
+
+# * Define socketio events
 
 
 @socketio.on("client-connect")
@@ -100,6 +106,44 @@ def handle_ai_prompt(prompt):
     socketio.emit("ai-output", output["formatted"], room=request.sid)
 
 
+# * Define flask routes
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        found_user = users_collection.find_one(
+            {"username": username, "password": hashed_password}
+        )
+        if not found_user:
+            found_user = users_collection.find_one(
+                {"email": username, "password": hashed_password}
+            )
+
+        if not found_user:
+            fields = (username, password)
+            error = True
+            message = "Invalid username or password."
+            return render_template(
+                "pages/login.html", error=error, username=username, message=message
+            )
+        else:
+            session["user"] = {
+                "uuid": str(found_user["_id"]),
+                "username": found_user["username"],
+                "email": found_user["email"],
+                "phone_number": found_user["phone_number"],
+            }
+            return redirect("/")
+    else:
+        return render_template("pages/login.html")
+
+
 @app.route("/signup")
 def signup():
     if "user" not in session:
@@ -129,7 +173,32 @@ def ai():
     )
 
 
+@app.route("/")
+def home():
+    if "user" not in session:
+        return render_template("pages/home.html", user=None)
+
+    found_user = users_collection.find_one({"username": session["user"]["username"]})
+
+    user_data = {
+        "uuid": str(found_user["_id"]),
+        "username": found_user["username"],
+        "email": found_user["email"],
+        "phone_number": found_user["phone_number"],
+    }
+
+    return render_template(
+        "pages/home.html",
+        user=user_data,
+        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
+    )
+
+
+# * Define API routes
+
 api.add_resource(users.UserManagementResource(), "/api/v1/user")
+
+# * Run flask socketio server
 
 if __name__ == "__main__":
     socketio.run(app, debug=True, port=5000)

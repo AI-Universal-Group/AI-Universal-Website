@@ -8,27 +8,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
         integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
     {% if error %}
     <script>
-        const email = "{{ fields[0] }}";
-        const password = "{{ fields[1] }}";
+        $(function () {
+            const error = "{{message}}";
+            if (error) {
+                // show the error popup
+                const errorPopup = $('#error-popup');
+                errorPopup.text(error);
+                errorPopup.hide();
+                errorPopup.removeClass('hidden');
+                errorPopup.fadeIn();
+                // hide the error popup after 3 seconds
+                setTimeout(() => {
+                    errorPopup.fadeOut();
+                }, 3000);
+            }
+
+            username = "{{ username }}"
+
+            if (username != null) {
+                $('#username').val(username);
+            }
+        });
     </script>
     {% endif %}
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </head>
 
-<body class="bg-gray-200">
+<body class="bg-gray-200 relative">
     <!-- center the main div in the center of the page, ensure it is resposive. -->
     <div class="flex items-center justify-center h-screen">
         <div class="w-full max-w-md">
             <!-- login form -->
-            <form action="#" method="post" class="bg-white shadow-lg rounded-lg p-6">
-                <!-- email input -->
+            <form method="post" class="bg-white shadow-lg rounded-lg p-6">
+                <!-- username / email input -->
                 <div class="mb-4">
-                    <label for="email" class="block text-gray-700 font-bold mb-2">Username / Email</label>
-                    <input type="email" name="email" id="email" placeholder="you@example.com" required
+                    <label for="username" class="block text-gray-700 font-bold mb-2">Username / Email</label>
+                    <input type="text" name="username" id="username" placeholder="you@example.com" required
                         class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 </div>
 
@@ -48,7 +65,12 @@
                 </div>
             </form>
         </div>
+
+        <!-- error message popup -->
+        <div id="error-popup" class="absolute top-0 right-0 mr-4 mt-4 bg-red-500 text-white px-4 py-2 rounded hidden">
+        </div>
     </div>
 </body>
+
 
 </html>
