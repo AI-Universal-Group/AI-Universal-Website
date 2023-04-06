@@ -1,7 +1,9 @@
 """
-Copyright (c) Zach Lagden 2023
-All Rights Reserved.
+(C) Zach Lagden 2023 All Rights Reserved.
+This code may not be used, copied, distributed, or reproduced in part or in whole for commercial or personal purposes without the express written consent of the owner. 
 """
+
+
 import hashlib
 import json
 import os
@@ -11,8 +13,6 @@ from dotenv import load_dotenv
 from endpoints import users
 from flask import (
     Flask,
-    jsonify,
-    make_response,
     redirect,
     render_template,
     request,
@@ -26,6 +26,7 @@ from werkzeug.debug import DebuggedApplication
 
 from flask_session import Session
 
+
 # * Initialize Flask/Flask Extensions and Configurations
 
 load_dotenv()
@@ -34,7 +35,7 @@ SESSION_COOKIE_NAME = "wrld"
 SESSION_TYPE = "filesystem"
 GPT_PROMPTS_FOLDER = "prompts"
 
-openai.api_key = "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"
+openai.api_key = os.getenv("openai")
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -56,16 +57,25 @@ users_collection = user_data_db["users"]
 settings_collection = user_data_db["settings"]
 user_information_collection = user_data_db["user_information"]
 
+
 # * Define socketio events
 
 
 @socketio.on("client-connect")
 def handle_client_connect(data):
+    """
+    This function logs a message when a user connects to the socketio application.
+    """
     print(f"Client connected: {data['id']}")
 
 
 @socketio.on("ai-prompt")
 def handle_ai_prompt(prompt):
+    """
+    This function handles the ai-prompt event and sends a prompt to OpenAI GPT-3 API to generate
+    a response. The generated response is then emitted back to the client through the ai-output
+    event.
+    """
     with open(
         os.path.abspath(os.path.join(GPT_PROMPTS_FOLDER, "Language GPT Model.json"))
     ) as f:
@@ -111,6 +121,10 @@ def handle_ai_prompt(prompt):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    This function renders the login page with GET request, or handles the form submission of the
+    login page and signs in the user.
+    """
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -146,6 +160,9 @@ def login():
 
 @app.route("/signup")
 def signup():
+    """
+    This function renders the signup page for new users.
+    """
     if "user" not in session:
         return render_template("pages/signup.html")
 
@@ -154,6 +171,10 @@ def signup():
 
 @app.route("/ai")
 def ai():
+    """
+    This function renders the AI chatbot page that allows authenticated users to communicate with
+    OpenAI GPT-3 API and send/receive messages in real-time.
+    """
     if "user" not in session:
         return render_template("pages/ai.html", user=None)
 
@@ -175,6 +196,9 @@ def ai():
 
 @app.route("/")
 def home():
+    """
+    This function renders the homepage for authenticated users.
+    """
     if "user" not in session:
         return render_template("pages/home.html", user=None)
 
@@ -197,6 +221,7 @@ def home():
 # * Define API routes
 
 api.add_resource(users.UserManagementResource(), "/api/v1/user")
+
 
 # * Run flask socketio server
 
