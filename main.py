@@ -1,23 +1,19 @@
 """
+Flask Server for the AI Universal Website.
+
 (C) Zach Lagden 2023 All Rights Reserved.
-This code may not be used, copied, distributed, or reproduced in part or in whole for commercial or personal purposes without the express written consent of the owner. 
+This code may not be used, copied, distributed, or reproduced in part or in whole
+for commercial or personal purposes without the express written consent of the owner. 
 """
 
 
 import hashlib
-import json
 import os
 
 import openai
 from dotenv import load_dotenv
 from endpoints import users
-from flask import (
-    Flask,
-    redirect,
-    render_template,
-    request,
-    session,
-)
+from flask import Flask, redirect, render_template, request, session
 from flask_minify import Minify
 from flask_restful import Api
 from flask_socketio import SocketIO
@@ -25,7 +21,6 @@ from pymongo import MongoClient
 from werkzeug.debug import DebuggedApplication
 
 from flask_session import Session
-
 
 # * Initialize Flask/Flask Extensions and Configurations
 
@@ -69,53 +64,6 @@ def handle_client_connect(data):
     print(f"Client connected: {data['id']}")
 
 
-@socketio.on("ai-prompt")
-def handle_ai_prompt(prompt):
-    """
-    This function handles the ai-prompt event and sends a prompt to OpenAI GPT-3 API to generate
-    a response. The generated response is then emitted back to the client through the ai-output
-    event.
-    """
-    with open(
-        os.path.abspath(os.path.join(GPT_PROMPTS_FOLDER, "Language GPT Model.json"))
-    ) as f:
-        message_data = json.loads(f.read())
-        f.close()
-
-    messages = [
-        {"role": "system", "content": message_data["system"]},
-    ]
-
-    for msg in message_data["training"]:
-        messages.append({"role": msg["role"], "content": msg["content"]})
-
-    messages.append(
-        {
-            "role": "user",
-            "content": f"Provide a response for the following message:\n{prompt}",
-        }
-    )
-
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
-
-    choice = response["choices"][0]  # first choice
-    if choice["finish_reason"] != "stop":
-        return False, Exception(
-            f"Gpt Stop Error- {choice['finish_reason']} - Gpt stopped while generating your response, this is usually a one time thing so please try again."
-        )
-
-    elif choice["finish_reason"] == "stop":
-        message_response = choice["message"]["content"]
-
-    output = {
-        "id": response["id"],
-        "raw": message_response,
-        "formatted": str(message_response),
-    }
-
-    socketio.emit("ai-output", output["formatted"], room=request.sid)
-
-
 # * Define flask routes
 
 
@@ -140,26 +88,23 @@ def login():
             )
 
         if not found_user:
-            fields = (username, password)
             error = True
             message = "Invalid username or password."
             return render_template(
                 "pages/login.html", error=error, username=username, message=message
             )
-        else:
-            session["user"] = {
-                "uuid": str(found_user["_id"]),
-                "username": found_user["username"],
-                "email": found_user["email"],
-                "phone_number": found_user["phone_number"],
-            }
-            return redirect("/")
-    else:
-        return render_template("pages/login.html")
+        session["user"] = {
+            "uuid": str(found_user["_id"]),
+            "username": found_user["username"],
+            "email": found_user["email"],
+            "phone_number": found_user["phone_number"],
+        }
+        return redirect("/")
+    return render_template("pages/login.html")
 
 
 @app.route("/signup")
-def signup():
+def signup_route():
     """
     This function renders the signup page for new users.
     """
@@ -170,7 +115,7 @@ def signup():
 
 
 @app.route("/ai")
-def ai():
+def ai_test_route():
     """
     This function renders the AI chatbot page that allows authenticated users to communicate with
     OpenAI GPT-3 API and send/receive messages in real-time.
@@ -195,7 +140,7 @@ def ai():
 
 
 @app.route("/")
-def home():
+def home_route():
     """
     This function renders the homepage for authenticated users.
     """
