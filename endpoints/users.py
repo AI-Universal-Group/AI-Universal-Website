@@ -1,9 +1,17 @@
+"""
+Flask Restful API for user managment.
+
+(C) Zach Lagden 2023 All Rights Reserved.
+This code may not be used, copied, distributed, or reproduced in part or in whole
+for commercial or personal purposes without the express written consent of the owner. 
+"""
+
 import hashlib
 import os
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import session
+from flask import session, jsonify
 from flask_restful import Resource, reqparse
 from pymongo import MongoClient
 
@@ -35,7 +43,7 @@ class UserManagement(Resource):
     def get(self):
         session_user = session.get("user")
         if not is_authenticated(session_user):
-            return {"message": "401 Unauthorized"}, 401
+            return jsonify({"message": "401 Unauthorized", "ok": False}), 401
 
         user_data_to_return = {
             "uuid": str(session_user["uuid"]),
@@ -44,7 +52,7 @@ class UserManagement(Resource):
             "phone_number": session_user["phone_number"],
         }
 
-        return {"data": user_data_to_return}, 200
+        return jsonify({"data": user_data_to_return, "ok": True}), 200
 
     def post(self):
         args = parser.parse_args()
@@ -57,9 +65,15 @@ class UserManagement(Resource):
             return {"message": "Logged out."}, 200
 
         if not username or not password:
-            return {
-                "message": "400 Bad Request: Missing username or password header."
-            }, 400
+            return (
+                jsonify(
+                    {
+                        "message": "400 Bad Request: Missing username or password header.",
+                        "ok": False,
+                    }
+                ),
+                400,
+            )
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
@@ -68,7 +82,15 @@ class UserManagement(Resource):
         )
 
         if not found_user:
-            return {"message": "401 Unauthorized: Incorrect username or password."}, 401
+            return (
+                jsonify(
+                    {
+                        "message": "401 Unauthorized: Incorrect username or password.",
+                        "ok": False,
+                    }
+                ),
+                401,
+            )
 
         session["user"] = {
             "uuid": str(found_user["_id"]),
@@ -76,7 +98,7 @@ class UserManagement(Resource):
             "email": found_user["email"],
             "phone_number": found_user["phone_number"],
         }
-        return {"data": session["user"]}, 200
+        return jsonify({"data": session["user"], "ok": True}), 200
 
     def put(self):
         args = parser.parse_args()
@@ -98,9 +120,15 @@ class UserManagement(Resource):
         )
 
         if existing_user:
-            return {
-                "message": "409 Conflict: User with same credentials already exists."
-            }, 409
+            return (
+                jsonify(
+                    {
+                        "message": "409 Conflict: User with same credentials already exists.",
+                        "ok": False,
+                    }
+                ),
+                409,
+            )
 
         new_user = {
             "username": username,
@@ -117,7 +145,7 @@ class UserManagement(Resource):
             "phone_number": phone_number,
         }
 
-        return {"data": session["user"]}, 201
+        return jsonify({"data": session["user"], "ok": True}), 201
 
     def patch(self):
         args = parser.parse_args()
@@ -134,18 +162,35 @@ class UserManagement(Resource):
         stored_password = user_info["password"]
 
         if not any([new_username, new_password]):
-            return {
-                "message": "400 Bad Request: Headers 'new_username' and or 'new_password'"
-                "are required and cannot be empty."
-            }, 400
+            return (
+                jsonify(
+                    {
+                        "message": "400 Bad Request: Headers 'new_username' and or 'new_password'"
+                        "are required and cannot be empty.",
+                        "ok": False,
+                    }
+                ),
+                400,
+            )
 
         if not current_password:
-            return {
-                "message": "400 Bad Request: 'password' is required and cannot be empty."
-            }, 400
+            return (
+                jsonify(
+                    {
+                        "message": "400 Bad Request: 'password' is required and cannot be empty.",
+                        "ok": False,
+                    }
+                ),
+                400,
+            )
 
         if hashlib.sha256(current_password.encode()).hexdigest() != stored_password:
-            return {"message": "401 Unauthorized: Incorrect password."}, 401
+            return (
+                jsonify(
+                    {"message": "401 Unauthorized: Incorrect password.", "ok": False}
+                ),
+                401,
+            )
 
         update_query = {}
         if new_username:
@@ -160,18 +205,18 @@ class UserManagement(Resource):
         session_user.update(update_query)
         session["user"] = session_user
 
-        return {"message": "User data updated successfully."}, 200
+        return jsonify({"message": "User data updated successfully.", "ok": False}), 200
 
     def delete(self):
         session_user = session.get("user")
         if not is_authenticated(session_user):
-            return {"message": "401 Unauthorized"}, 401
+            return jsonify({"message": "401 Unauthorized", "ok": False}), 401
 
         uid = ObjectId(session_user["uuid"])
         users_collection.delete_one({"_id": uid})
         session.pop("user", None)
 
-        return {"message": "User deleted successfully."}, 200
+        return jsonify({"message": "User deleted successfully.", "ok": False}), 200
 
 
 def UserManagementResource():
