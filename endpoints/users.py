@@ -1,5 +1,5 @@
 """
-Flask Restful API for user managment
+Flask Restful API for user managment.
 
 (C) Zach Lagden 2023 All Rights Reserved.
 This code may not be used, copied, distributed, or reproduced in part or in whole
