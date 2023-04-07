@@ -165,7 +165,7 @@ def home_route():
 
 # * Define API routes
 
-api.add_resource(users.UserManagementResource(), "/api/v1/user")
+api.add_resource(users.user_management_resource(), "/api/v1/user")
 
 
 # * Run flask socketio server

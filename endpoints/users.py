@@ -36,11 +36,31 @@ parser.add_argument("new_password", type=str)
 
 
 def is_authenticated(session_user):
-    return True if session_user else False
+    """
+    Determine if a user is authenticated or not.
+
+    Args:
+    - session_user: The current user's session.
+
+    Returns:
+    - True if the user is authenticated; False otherwise.
+    """
+
+    return bool(session_user)
 
 
 class UserManagement(Resource):
+    """
+    Class handling creation, update and removal of users.
+    """
+
     def get(self):
+        """
+        Retrieve user data for authenticated user.
+
+        Returns:
+        - JSON object containing user information if user is authenticated.
+        """
         session_user = session.get("user")
         if not is_authenticated(session_user):
             return jsonify({"message": "401 Unauthorized", "ok": False}), 401
@@ -55,6 +75,12 @@ class UserManagement(Resource):
         return jsonify({"data": user_data_to_return, "ok": True}), 200
 
     def post(self):
+        """
+        Log in a user.
+
+        Returns:
+        - JSON object containing authenticated user's data.
+        """
         args = parser.parse_args()
         username = args["username"]
         password = args["password"]
@@ -101,6 +127,12 @@ class UserManagement(Resource):
         return jsonify({"data": session["user"], "ok": True}), 200
 
     def put(self):
+        """
+        Create a new user.
+
+        Returns:
+        - JSON object containing the newly created user's data.
+        """
         args = parser.parse_args()
         username = args["username"]
         password = args["password"]
@@ -148,6 +180,12 @@ class UserManagement(Resource):
         return jsonify({"data": session["user"], "ok": True}), 201
 
     def patch(self):
+        """
+        Update a user's data.
+
+        Returns:
+        - JSON object containing updated user data.
+        """
         args = parser.parse_args()
         current_password = args["password"]
         new_username = args["new_username"]
@@ -208,6 +246,12 @@ class UserManagement(Resource):
         return jsonify({"message": "User data updated successfully.", "ok": False}), 200
 
     def delete(self):
+        """
+        Delete a user.
+
+        Returns:
+        - JSON object containing message of successful user removal.
+        """
         session_user = session.get("user")
         if not is_authenticated(session_user):
             return jsonify({"message": "401 Unauthorized", "ok": False}), 401
@@ -219,5 +263,8 @@ class UserManagement(Resource):
         return jsonify({"message": "User deleted successfully.", "ok": False}), 200
 
 
-def UserManagementResource():
+def user_management_resource():
+    """
+    Function returning an instance of UserManagement class.
+    """
     return UserManagement
