@@ -2,46 +2,33 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MW6SP46');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
-    <title>Login Form</title>
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
-        integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
-    {% if error %}
-    <script>
-        $(function () {
-            const error = "{{message}}";
-            if (error) {
-                // show the error popup
-                const errorPopup = $('#error-popup');
-                errorPopup.text(error);
-                errorPopup.hide();
-                errorPopup.removeClass('hidden');
-                errorPopup.fadeIn();
-                // hide the error popup after 3 seconds
-                setTimeout(() => {
-                    errorPopup.fadeOut();
-                }, 3000);
-            }
-
-            username = "{{ username }}"
-
-            if (username != null) {
-                $('#username').val(username);
-            }
-        });
-    </script>
-    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Page</title>
+    <!-- include Tailwind CSS stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" />
 </head>
 
 <body class="bg-gray-200 relative">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MW6SP46" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <!-- center the main div in the center of the page, ensure it is resposive. -->
     <div class="flex items-center justify-center h-screen">
         <div class="w-full max-w-md">
             <!-- login form -->
-            <form method="post" class="bg-white shadow-lg rounded-lg p-6">
+            <form id="login-form" class="bg-white shadow-lg rounded-lg p-6">
                 <!-- username / email input -->
                 <div class="mb-4">
                     <label for="username" class="block text-gray-700 font-bold mb-2">Username / Email</label>
@@ -58,19 +45,67 @@
 
                 <!-- submit button -->
                 <div class="flex items-center justify-between">
-                    <button type="submit"
+                    <button type="submit" id="login-button"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Sign In
                     </button>
                 </div>
             </form>
+
+            <!-- signup form -->
+            <form id="signup-form" class="bg-white shadow-lg rounded-lg p-6 hidden">
+                <!-- username input -->
+                <div class="mb-4">
+                    <label for="new-username" class="block text-gray-700 font-bold mb-2">Username</label>
+                    <input type="text" name="new-username" id="new-username" placeholder="Your Username" required
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <!-- email input -->
+                <div class="mb-4">
+                    <label for="new-email" class="block text-gray-700 font-bold mb-2">Email address</label>
+                    <input type="email" name="new-email" id="new-email" placeholder="you@example.com" required
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <!-- password input -->
+                <div class="mb-6">
+                    <label for="new-password" class="block text-gray-700 font-bold mb-2">Password</label>
+                    <input type="password" name="new-password" id="new-password" placeholder="***********" required
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <!-- phone number input -->
+                <div class="mb-6">
+                    <label for="phone-number" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+                    <input type="text" name="phone-number" id="phone-number" placeholder="+1 234-567-8901" required
+                        class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <!-- submit button -->
+                <div class="flex items-center justify-between">
+                    <button type="submit" id="signup-button"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Signup
+                    </button>
+                </div>
+            </form>
+
+            <!-- toggle login/signup forms-->
+            <p>
+                Already have an account?
+                <a href="#" id="login-toggle" class="text-blue-700">Login here</a>
+            </p>
+            <p class="hidden" id="signup-message">Signed up! Please now login.</p>
         </div>
 
         <!-- error message popup -->
         <div id="error-popup" class="absolute top-0 right-0 mr-4 mt-4 bg-red-500 text-white px-4 py-2 rounded hidden">
         </div>
     </div>
-</body>
 
+    <!-- include JS scripts -->
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
 
 </html>
