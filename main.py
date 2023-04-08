@@ -100,7 +100,24 @@ def login():
             "phone_number": found_user["phone_number"],
         }
         return redirect("/")
-    return render_template("pages/login.html")
+
+    if "user" not in session:
+        return render_template("pages/login.html", user=None)
+
+    found_user = users_collection.find_one({"username": session["user"]["username"]})
+
+    user_data = {
+        "uuid": str(found_user["_id"]),
+        "username": found_user["username"],
+        "email": found_user["email"],
+        "phone_number": found_user["phone_number"],
+    }
+
+    return render_template(
+        "pages/login.html",
+        user=user_data,
+        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
+    )
 
 
 @app.route("/signup")
