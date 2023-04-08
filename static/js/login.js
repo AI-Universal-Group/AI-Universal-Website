@@ -2,12 +2,16 @@
 const loginForm = $("#login-form");
 const signupForm = $("#signup-form");
 const loginToggle = $("#login-toggle");
+const signupToggle = $("#signup-toggle");
 const signupMessage = $("#signup-message");
+const toggleMessageLogin = $("#toggle-message-login");
+const toggleMessageSignup = $("#toggle-message-signup");
 
 // add event listeners
 loginForm.on("submit", handleLogin);
 signupForm.on("submit", handleSignup);
 loginToggle.on("click", toggleForms);
+signupToggle.on("click", toggleForms);
 
 // handle login form submission
 async function handleLogin(event) {
@@ -67,6 +71,8 @@ function toggleForms() {
     loginForm.toggleClass("hidden");
     signupForm.toggleClass("hidden");
     signupMessage.addClass("hidden");
+    toggleMessageLogin.toggleClass("hidden");
+    toggleMessageSignup.toggleClass("hidden");
 }
 
 // display user data in the HTML
