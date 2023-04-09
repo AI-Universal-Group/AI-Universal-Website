@@ -1,0 +1,33 @@
+.example-usage,
+.testimonial,
+.feature,
+.faq {
+    text-align: center;
+}
+
+.feature {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.faq {
+    margin-bottom: 30px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.faq:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.faq h3 {
+    text-align: left;
+}
+
+.faq p {
+    text-align: left;
+    margin-top: 10px;
+}

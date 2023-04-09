@@ -1,0 +1,17 @@
+/* Custom styles for the homepage */
+.container {
+    max-width: 1280px;
+}
+
+.example-usage,
+.testimonial {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.5s ease-in-out;
+}
+
+.example-usage.visible,
+.testimonial.visible {
+    opacity: 1;
+    transform: translateY(0);
+}

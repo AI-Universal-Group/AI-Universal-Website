@@ -22,3 +22,25 @@ socket.on('connect', function () {
         id: socket.id
     });
 });
+
+// Get the current year and update all elements with class "current-year"
+$(document).ready(function () {
+    const currentYear = new Date().getFullYear();
+    $('.current-year').text(currentYear);
+});
+
+// Back to top button
+const backToTopBtn = document.getElementById("backToTopBtn");
+
+window.addEventListener("scroll", () => {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        backToTopBtn.style.display = "block";
+    } else {
+        backToTopBtn.style.display = "none";
+    }
+});
+
+backToTopBtn.addEventListener("click", () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+});

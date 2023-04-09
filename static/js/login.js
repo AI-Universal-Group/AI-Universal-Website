@@ -1,3 +1,7 @@
+/**
+ * @copyright This code is the property of [company name]. You are strictly prohibited from using or distributing this code for personal or commercial purposes without explicit permission from [company name].
+ */
+
 // get form elements
 const loginForm = $("#login-form");
 const signupForm = $("#signup-form");
@@ -13,7 +17,10 @@ signupForm.on("submit", handleSignup);
 loginToggle.on("click", toggleForms);
 signupToggle.on("click", toggleForms);
 
-// handle login form submission
+/**
+ * Handle login form submission
+ * @param {object} event - Form submission event object
+ */
 async function handleLogin(event) {
     event.preventDefault(); // prevent default form behavior
 
@@ -38,7 +45,10 @@ async function handleLogin(event) {
     }
 }
 
-// handle signup form submission
+/**
+ * Handle signup form submission
+ * @param {object} event - Form submission event object
+ */
 async function handleSignup(event) {
     event.preventDefault(); // prevent default form behavior
 
@@ -75,7 +85,10 @@ function toggleForms() {
     toggleMessageSignup.toggleClass("hidden");
 }
 
-// display user data in the HTML
+/**
+ * Display user data in the HTML
+ * @param {object} data - User data object containing username, email, and phone number
+ */
 function displayUserData(data) {
     const userDisplay = `
     <p>Username: ${data.username}</p>
@@ -85,7 +98,10 @@ function displayUserData(data) {
     $("#user-display").html(userDisplay);
 }
 
-// display error message in popup
+/**
+ * Display error message in popup
+ * @param {string} message - Error message to display
+ */
 function displayError(message) {
     const errorPopup = $("#error-popup");
     errorPopup.html(message);
@@ -94,3 +110,7 @@ function displayError(message) {
         errorPopup.addClass("hidden");
     }, 3000);
 }
+
+$(document).ready(() => {
+
+})

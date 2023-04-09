@@ -3,11 +3,114 @@
 {% block title %}Home{% endblock %}
 
 {% block head %}
+<!-- Owl Carousel 2 CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
 {% endblock %}
 
 {% block body %}
-{{ user }}
+<!-- Owl Carousel 2 JS -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+    integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Introduction -->
+<section class="bg-gray-800 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold mb-6">Welcome to AI Universal</h1>
+        <p class="text-lg mb-8">AI Universal is an AI-based business that aims to provide easy-to-use and accessible AI
+            technology to users around the world. Our mission is to remove the confusion around AI and allow everyone to
+            use it for good. We provide users with a platform for learning, mental support, and more, making AI
+            technology accessible to a wide audience.</p>
+        <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onclick="location.href='/learn-more'">Learn More</button>
+
+    </div>
+</section>
+<!-- Example Usage -->
+<section class="bg-gray-900 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6">Example Usage</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Example 1 -->
+            <div class="example-usage">
+                <h3 class="text-2xl font-bold mb-4">Homework Assignments</h3>
+                <p>Generate custom prompts for homework assignments, helping students learn and understand topics with
+                    ease.</p>
+            </div>
+            <!-- Example 2 -->
+            <div class="example-usage">
+                <h3 class="text-2xl font-bold mb-4">Learning New Things</h3>
+                <p>Discover new information and expand your knowledge on various subjects with the help of AI.</p>
+            </div>
+            <!-- Example 3 -->
+            <div class="example-usage">
+                <h3 class="text-2xl font-bold mb-4">Personalized AI Companion</h3>
+                <p>Get personalized guidance and support from an AI companion to improve your well-being.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="bg-gray-800 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6">Testimonials</h2>
+        <div class="owl-carousel owl-theme">
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"AI Universal has revolutionized the way I approach my work. The AI-powered tools have
+                    made my daily tasks more efficient and enjoyable."</p>
+                <p class="font-bold">- James Smith</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"As a teacher, AI Universal has been an invaluable resource for me. It has helped me
+                    create engaging and personalized content for my students."</p>
+                <p class="font-bold">- Sarah Brown</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"AI Universal's mental health support has been life-changing for me. The personalized
+                    guidance and recommendations have made a huge difference in my well-being."</p>
+                <p class="font-bold">- Emily Johnson</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"As a small business owner, AI Universal's tools have helped me streamline my operations
+                    and make data-driven decisions."</p>
+                <p class="font-bold">- Michael Lee</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"AI Universal has made learning new subjects so much easier. The AI-powered tools and
+                    recommendations have helped me stay engaged and motivated."</p>
+                <p class="font-bold">- Karen Martinez</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"The user-friendly interface and easy-to-understand AI technology have made AI Universal
+                    a go-to platform for all my AI needs."</p>
+                <p class="font-bold">- David Clark</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"AI Universal has helped me immensely in my creative writing endeavors. The AI-generated
+                    prompts and suggestions have sparked new ideas and improved my writing."</p>
+                <p class="font-bold">- Jessica Anderson</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"With AI Universal, I've been able to enhance my understanding of complex topics and
+                    stay ahead in my field."</p>
+                <p class="font-bold">- Thomas Wilson</p>
+            </div>
+            <div class="testimonial p-6 bg-gray-700 rounded-lg">
+                <p class="mb-4">"AI Universal's commitment to democratizing AI technology has truly made a difference in
+                    how I approach learning and problem-solving."</p>
+                <p class="font-bold">- Susan White</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
 
 {% block js %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

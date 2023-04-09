@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Learn More{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/learn_more.css') }}" />
+{% endblock %}
+
+{% block body %}
+<!-- Overview -->
+<section class="bg-gray-800 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h1 class="text-4xl font-bold mb-6">Learn More About AI Universal</h1>
+        <p class="text-lg mb-8">AI Universal is a cutting-edge technology company providing AI-based solutions for a
+            wide range of
+            industries and applications. We believe in making artificial intelligence accessible and beneficial for
+            everyone. Our team of experts continuously works on research and development to bring innovative AI tools
+            and services to our users.</p>
+        <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onclick="location.href='/get-started'">Get Started</button>
+
+    </div>
+</section>
+
+<!-- Features -->
+<section class="bg-gray-900 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6">Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="feature">
+                <h3 class="text-2xl font-bold mb-4">Accessibility</h3>
+                <p>Our AI solutions are designed for users of all skill levels. Whether you are a student, a
+                    professional, or a business owner, our platform offers a wide range of tools and services to meet
+                    your needs.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="feature">
+                <h3 class="text-2xl font-bold mb-4">Innovation</h3>
+                <p>Our team constantly strives to push the boundaries of AI technology. We are committed to staying at
+                    the forefront of AI research and development, ensuring that our users have access to the latest and
+                    most advanced tools available.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="feature">
+                <h3 class="text-2xl font-bold mb-4">Security and Privacy</h3>
+                <p>We take data security and privacy very seriously. Our platform uses state-of-the-art encryption and
+                    security measures to protect user data, ensuring that you can trust AI Universal with your most
+                    sensitive information.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Frequently Asked Questions -->
+<section class="bg-gray-800 text-white py-20">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="faq" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+                <h3 class="text-2xl font-bold mb-4">What is AI Universal?</h3>
+                <p>AI Universal is a platform that provides AI-based tools and services to users across the globe. Our
+                    mission is to democratize AI technology and make it accessible to everyone.</p>
+            </div>
+            <div class="faq" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
+                <h3 class="text-2xl font-bold mb-4">Who can use AI Universal?</h3>
+                <p>AI Universal is designed for everyone, from students and educators to professionals and hobbyists.
+                    Our platform offers a wide range of AI tools and services tailored to various user needs.</p>
+            </div>
+            <div class="faq" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+                <h3 class="text-2xl font-bold mb-4">How can AI Universal benefit me?</h3>
+                <p>AI Universal can help you improve your productivity, learn new subjects, and solve problems more
+                    efficiently. Our AI-powered tools can also provide personalized support and recommendations for your
+                    mental health and well-being.</p>
+            </div>
+            <div class="faq" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
+                <h3 class="text-2xl font-bold mb-4">Is AI Universal safe and secure?</h3>
+                <p>Yes, AI Universal is committed to ensuring user privacy and security. We adhere to strict data
+                    protection policies and utilize state-of-the-art security measures to protect your information.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<button
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline get-started-button"
+    onclick="location.href='/get-started'">Get Started</button>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+    integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ url_for('static', filename='js/learn_more.js') }}"></script>
+{% endblock %}

@@ -159,7 +159,7 @@ def ai_test_route():
 @app.route("/")
 def home_route():
     """
-    This function renders the homepage for authenticated users.
+    This function renders the homepage for authenticated/unauthenticated users.
     """
     if "user" not in session:
         return render_template("pages/home.html", user=None)
@@ -173,11 +173,28 @@ def home_route():
         "phone_number": found_user["phone_number"],
     }
 
-    return render_template(
-        "pages/home.html",
-        user=user_data,
-        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
-    )
+    return render_template("pages/home.html", user=user_data)
+
+
+@app.route("/learn-more")
+def learn_more_route():
+    """
+    This function renders the learn more page for authenticated/unauthenticated users.
+    """
+
+    if "user" not in session:
+        return render_template("pages/learn_more.html", user=None)
+
+    found_user = users_collection.find_one({"username": session["user"]["username"]})
+
+    user_data = {
+        "uuid": str(found_user["_id"]),
+        "username": found_user["username"],
+        "email": found_user["email"],
+        "phone_number": found_user["phone_number"],
+    }
+
+    return render_template("pages/learn_more.html", user=user_data)
 
 
 # * Define API routes
