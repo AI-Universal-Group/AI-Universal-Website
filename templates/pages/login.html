@@ -32,6 +32,7 @@
                     Sign In
                 </button>
             </div>
+            <p class="hidden" id="signup-message">Signed up! Please now login.</p>
         </form>
 
         <!-- signup form -->
@@ -82,11 +83,13 @@
             Don't have an account?
             <a href="#" id="signup-toggle" class="text-blue-400">Signup here</a>
         </p>
-        <p class="hidden" id="signup-message">Signed up! Please now login.</p>
     </div>
 
     <!-- error message popup -->
     <div id="error-popup" class="absolute top-0 right-0 mr-4 mt-4 bg-red-500 text-white px-4 py-2 rounded hidden">
+    </div>
+    <!-- message popup -->
+    <div id="popup" class="absolute top-0 right-0 mr-4 mt-4 bg-green-500 text-white px-4 py-2 rounded hidden">
     </div>
 </div>
 {% endblock %}

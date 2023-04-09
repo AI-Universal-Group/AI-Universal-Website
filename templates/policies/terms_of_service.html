@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/policy.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="container mx-auto mt-10 px-4 content">
+    <h1 class="text-4xl font-bold mb-4 text-white">Terms of Service</h1>
+    <div class="bg-gray-500 p-6 rounded-lg">
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">Introduction</h2>
+            <p>By using the AI Universal website and services, you agree to be bound by these Terms of Service. If you
+                do
+                not agree with any part of these Terms, you must not use our website or services.</p>
+        </div>
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">1. Account Registration</h2>
+            <p>To access certain features of our website and services, you may be required to register for an account.
+                You agree to provide accurate and up-to-date information during the registration process and to keep
+                your
+                account information updated.</p>
+        </div>
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">2. User Conduct</h2>
+            <p>You agree to use our website and services in compliance with all applicable laws and regulations. You may
+                not use our website or services to engage in any illegal, harmful, or offensive activities.</p>
+        </div>
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">3. Termination</h2>
+            <p>We reserve the right to suspend or terminate your account and access to our services at any time, without
+                prior notice or liability, for any reason, including but not limited to a breach of these Terms.</p>
+        </div>
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">4. Disclaimer of Warranties and Limitation of Liability</h2>
+            <p>AI Universal provides its services on an "as is" basis, without any warranties of any kind, either
+                express
+                or implied. We do not warrant that our services will be error-free, uninterrupted, or secure. In no
+                event
+                shall AI Universal be liable for any direct, indirect, incidental, or consequential damages arising out
+                of
+                or in connection with your use of our website or services.</p>
+        </div>
+        <div class="policy-section">
+            <h2 class="text-2xl font-bold mb-2">5. Contact Us</h2>
+            <p>If you have any questions or concerns about these Terms of Service, please contact us at [email address]
+                or join our Discord server.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

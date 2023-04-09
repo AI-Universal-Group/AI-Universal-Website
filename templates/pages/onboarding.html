@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Onboarding{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}" />
+{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-20">
+    <div class="onboarding">
+        <h2 class="text-3xl font-bold text-center mb-8">Welcome to AI Universal!</h2>
+        <div class="onboarding-steps">
+            <div class="step active" id="step1">
+                <h3 class="text-2xl font-bold mb-4">Create an Account</h3>
+                <form id="signupForm">
+                    <input type="text" id="username" placeholder="Username" class="form-input mb-4" />
+                    <input type="email" id="email" placeholder="Email" class="form-input mb-4" />
+                    <input type="number" id="phoneNumber" placeholder="Phone Number" class="form-input mb-4" />
+                    <input type="password" id="password" placeholder="Password" class="form-input mb-4" />
+                    <button type="submit" class="submit-btn">Sign Up</button>
+                </form>
+            </div>
+            <div class="step" id="step2">
+                <h3 class="text-2xl font-bold mb-4">How It Works</h3>
+                <p class="mb-4">
+                    AI Universal is an AI-powered platform that helps you generate high-quality content quickly and
+                    easily. Our AI models are trained on a vast dataset to provide you with the most relevant and
+                    accurate results.
+                </p>
+                <p class="mb-4">
+                    To get started, simply input your content requirements in the prompt, and our AI will generate the
+                    content for you. You can then review, edit, and use the generated content as you see fit.
+                </p>
+                <p class="mb-4">
+                    Our platform offers various AI tools, ranging from content generation to data analysis. You can
+                    explore these tools to find the ones that best suit your needs.
+                </p>
+                <button class="next-btn" onclick="nextStep()">Got it!</button>
+            </div>
+            <div class="step" id="step3">
+                <h3 class="text-2xl font-bold mb-4">Start Exploring</h3>
+                <p class="mb-4">
+                    You're all set! Now you can start exploring the AI Universal platform and make the most out of our
+                    AI-powered tools.
+                </p>
+                <button class="finish-btn" onclick="finishOnboarding()">Let's Go!</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

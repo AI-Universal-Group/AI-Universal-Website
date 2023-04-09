@@ -28,7 +28,7 @@ async function handleLogin(event) {
     const password = $("#password").val();
 
     try {
-        const response = await fetch("/api/login", {
+        const response = await fetch("/api/v1/user", {
             method: "POST",
             body: JSON.stringify({ username, password }),
             headers: { "Content-Type": "application/json" },
@@ -40,6 +40,7 @@ async function handleLogin(event) {
 
         const data = await response.json();
         displayUserData(data.data);
+        window.location.replace("/");
     } catch (error) {
         displayError(error.message);
     }
@@ -58,7 +59,7 @@ async function handleSignup(event) {
     const phone_number = $("#phone-number").val();
 
     try {
-        const response = await fetch("/api/signup", {
+        const response = await fetch("/api/v1/user", {
             method: "PUT",
             body: JSON.stringify({ username, email, password, phone_number }),
             headers: { "Content-Type": "application/json" },
@@ -68,8 +69,7 @@ async function handleSignup(event) {
             throw new Error("Failed to signup");
         }
 
-        // display success message
-        signupMessage.removeClass("hidden");
+        displayError("Signup successful, please sign in.");
         toggleForms();
     } catch (error) {
         displayError(error.message);
@@ -111,6 +111,15 @@ function displayError(message) {
     }, 3000);
 }
 
-$(document).ready(() => {
-
-})
+/**
+ * Display message in popup
+ * @param {string} message - Message to display
+ */
+function displayError(message) {
+    const errorPopup = $("#popup");
+    errorPopup.html(message);
+    errorPopup.removeClass("hidden");
+    setTimeout(() => {
+        errorPopup.addClass("hidden");
+    }, 3000);
+}

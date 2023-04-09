@@ -1,3 +1,4 @@
+// Define $buoop using object shorthand notation
 const $buoop = {
     required: { e: -3, f: -3, o: -3, s: -1, c: -3 },
     insecure: true,
@@ -5,42 +6,32 @@ const $buoop = {
     api: 2023.03,
 };
 
-function loadBrowserUpdateScript() {
-    const browserUpdateScript = document.createElement("script");
-    browserUpdateScript.src = "//browser-update.org/update.min.js";
-    document.body.appendChild(browserUpdateScript);
-}
-
-document.addEventListener("DOMContentLoaded", loadBrowserUpdateScript, false);
-window.addEventListener('load', loadBrowserUpdateScript);
-
-const socket = io();
-socket.on('connect', function () {
-    console.log('Connected to server.');
-    console.log(`Socket Id: ${socket.id}`);
-    socket.emit('client-connect', {
-        id: socket.id
-    });
+// Use jQuery to load BrowserUpdate script and attach it to the body
+$(function () {
+    $('body').append('<script src="//browser-update.org/update.min.js"></script>');
 });
 
-// Get the current year and update all elements with class "current-year"
-$(document).ready(function () {
+// Use jQuery to update all elements with class "current-year" with the current year
+$(function () {
     const currentYear = new Date().getFullYear();
     $('.current-year').text(currentYear);
 });
 
-// Back to top button
-const backToTopBtn = document.getElementById("backToTopBtn");
+// Use jQuery to toggle the display of the back to top button based on scroll position
+$(function () {
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 20) {
+            $('#backToTopBtn').fadeIn();
+        } else {
+            $('#backToTopBtn').fadeOut();
+        }
+    });
 
-window.addEventListener("scroll", () => {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        backToTopBtn.style.display = "block";
-    } else {
-        backToTopBtn.style.display = "none";
-    }
-});
-
-backToTopBtn.addEventListener("click", () => {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+    // Use jQuery to animate scrolling to the top on click of the back to top button
+    $('#backToTopBtn').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
 });
