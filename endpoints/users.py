@@ -1,5 +1,5 @@
 """
-Flask Restful API for user managment.
+Flask Restful API for user management.
 
 (C) Zach Lagden 2023 All Rights Reserved.
 This code may not be used, copied, distributed, or reproduced in part or in whole
@@ -11,7 +11,7 @@ import os
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import session, jsonify
+from flask import session, jsonify, make_response
 from flask_restful import Resource, reqparse
 from pymongo import MongoClient
 
@@ -63,7 +63,10 @@ class UserManagement(Resource):
         """
         session_user = session.get("user")
         if not is_authenticated(session_user):
-            return jsonify({"message": "401 Unauthorized", "ok": False}), 401
+            response = make_response(
+                jsonify({"message": "401 Unauthorized", "ok": False}), 401
+            )
+            return response
 
         user_data_to_return = {
             "uuid": str(session_user["uuid"]),
@@ -72,7 +75,10 @@ class UserManagement(Resource):
             "phone_number": session_user["phone_number"],
         }
 
-        return jsonify({"data": user_data_to_return, "ok": True}), 200
+        response = make_response(
+            jsonify({"data": user_data_to_return, "ok": True}), 200
+        )
+        return response
 
     def post(self):
         """
@@ -86,12 +92,15 @@ class UserManagement(Resource):
         password = args["password"]
         logout = args["logout"]
 
+        print(f"Recived Request: {username}, {password}")
+
         if logout:
             session.pop("user", None)
-            return {"message": "Logged out."}, 200
+            response = make_response(jsonify({"message": "Logged out."}), 200)
+            return response
 
         if not username or not password:
-            return (
+            response = make_response(
                 jsonify(
                     {
                         "message": "400 Bad Request: Missing username or password header.",
@@ -100,6 +109,7 @@ class UserManagement(Resource):
                 ),
                 400,
             )
+            return response
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
@@ -108,7 +118,7 @@ class UserManagement(Resource):
         )
 
         if not found_user:
-            return (
+            response = make_response(
                 jsonify(
                     {
                         "message": "401 Unauthorized: Incorrect username or password.",
@@ -117,6 +127,7 @@ class UserManagement(Resource):
                 ),
                 401,
             )
+            return response
 
         session["user"] = {
             "uuid": str(found_user["_id"]),
@@ -124,7 +135,8 @@ class UserManagement(Resource):
             "email": found_user["email"],
             "phone_number": found_user["phone_number"],
         }
-        return jsonify({"data": session["user"], "ok": True}), 200
+        response = make_response(jsonify({"data": session["user"], "ok": True}), 200)
+        return response
 
     def put(self):
         """
@@ -152,7 +164,7 @@ class UserManagement(Resource):
         )
 
         if existing_user:
-            return (
+            response = make_response(
                 jsonify(
                     {
                         "message": "409 Conflict: User with same credentials already exists.",
@@ -161,6 +173,7 @@ class UserManagement(Resource):
                 ),
                 409,
             )
+            return response
 
         new_user = {
             "username": username,
@@ -177,7 +190,8 @@ class UserManagement(Resource):
             "phone_number": phone_number,
         }
 
-        return jsonify({"data": session["user"], "ok": True}), 201
+        response = make_response(jsonify({"data": session["user"], "ok": True}), 201)
+        return response
 
     def patch(self):
         """
@@ -193,14 +207,17 @@ class UserManagement(Resource):
 
         session_user = session.get("user")
         if not is_authenticated(session_user):
-            return {"message": "401 Unauthorized"}, 401
+            response = make_response(
+                jsonify({"message": "401 Unauthorized", "ok": False}), 401
+            )
+            return response
 
         uid = ObjectId(session_user["uuid"])
         user_info = users_collection.find_one({"_id": uid})
         stored_password = user_info["password"]
 
         if not any([new_username, new_password]):
-            return (
+            response = make_response(
                 jsonify(
                     {
                         "message": "400 Bad Request: Headers 'new_username' and or 'new_password'"
@@ -210,9 +227,10 @@ class UserManagement(Resource):
                 ),
                 400,
             )
+            return response
 
         if not current_password:
-            return (
+            response = make_response(
                 jsonify(
                     {
                         "message": "400 Bad Request: 'password' is required and cannot be empty.",
@@ -221,14 +239,16 @@ class UserManagement(Resource):
                 ),
                 400,
             )
+            return response
 
         if hashlib.sha256(current_password.encode()).hexdigest() != stored_password:
-            return (
+            response = make_response(
                 jsonify(
                     {"message": "401 Unauthorized: Incorrect password.", "ok": False}
                 ),
                 401,
             )
+            return response
 
         update_query = {}
         if new_username:
@@ -243,24 +263,32 @@ class UserManagement(Resource):
         session_user.update(update_query)
         session["user"] = session_user
 
-        return jsonify({"message": "User data updated successfully.", "ok": False}), 200
+        response = make_response(
+            jsonify({"message": "User data updated successfully.", "ok": True}), 200
+        )
+        return response
 
     def delete(self):
         """
         Delete a user.
-
         Returns:
         - JSON object containing message of successful user removal.
         """
         session_user = session.get("user")
         if not is_authenticated(session_user):
-            return jsonify({"message": "401 Unauthorized", "ok": False}), 401
+            response = make_response(
+                jsonify({"message": "401 Unauthorized", "ok": False}), 401
+            )
+            return response
 
         uid = ObjectId(session_user["uuid"])
         users_collection.delete_one({"_id": uid})
         session.pop("user", None)
 
-        return jsonify({"message": "User deleted successfully.", "ok": False}), 200
+        response = make_response(
+            jsonify({"message": "User deleted successfully.", "ok": True}), 200
+        )
+        return response
 
 
 def user_management_resource():

@@ -7,18 +7,16 @@ for commercial or personal purposes without the express written consent of the o
 """
 
 
-import hashlib
 import os
 
 import openai
 from dotenv import load_dotenv
 from endpoints import users
 from flask import Flask, redirect, render_template, request, session
+from flask_caching import Cache
 from flask_minify import Minify
 from flask_restful import Api
-from flask_socketio import SocketIO
 from pymongo import MongoClient
-from werkzeug.debug import DebuggedApplication
 
 from flask_session import Session
 
@@ -26,23 +24,25 @@ from flask_session import Session
 
 load_dotenv()
 
-SESSION_COOKIE_NAME = "wrld"
-SESSION_TYPE = "filesystem"
 GPT_PROMPTS_FOLDER = "prompts"
 
 openai.api_key = os.getenv("openai")
 
 app = Flask(__name__)
-app.config.from_object(__name__)
 
-#! Remove when actually deploying
-app.debug = True
-app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
+flask_config = {
+    "CACHE_TYPE": "SimpleCache",
+    "CACHE_DEFAULT_TIMEOUT": 300,
+    "SESSION_COOKIE_NAME": "wrld",
+    "SESSION_TYPE": "filesystem",
+}
+
+app.config.from_mapping(flask_config)
 
 Session(app)
 api = Api(app)
+cache = Cache(app)
 Minify(app=app, html=True, js=True, cssless=True)
-socketio = SocketIO(app)
 
 # * Initialize MongoDB Connection
 
@@ -53,82 +53,43 @@ settings_collection = user_data_db["settings"]
 user_information_collection = user_data_db["user_information"]
 
 
-# * Define socketio events
-
-
-@socketio.on("client-connect")
-def handle_client_connect(data):
-    """
-    This function logs a message when a user connects to the socketio application.
-    """
-    print(f"Client connected: {data['id']}")
-
-
 # * Define flask routes
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
+def get_user_data(route_session):
     """
-    This function renders the login page with GET request, or handles the form submission of the
-    login page and signs in the user.
+    This function takes a session object as input, checks if there exists a 'user' key in it,
+    finds the corresponding user in the users_collection using the username,
+    and returns a dictionary with the user's unique identifier, username, email, and phone number.
+
+    :param session: dictionary containing user session data.
+    :return: dictionary containing uuid, username, email, and phone number of the found user.
     """
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+    if "user" not in route_session:
+        return None
 
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    found_user = users_collection.find_one(
+        {"username": route_session["user"]["username"]}
+    )
 
-        found_user = users_collection.find_one(
-            {"username": username, "password": hashed_password}
-        )
-        if not found_user:
-            found_user = users_collection.find_one(
-                {"email": username, "password": hashed_password}
-            )
-
-        if not found_user:
-            error = True
-            message = "Invalid username or password."
-            return render_template(
-                "pages/login.html", error=error, username=username, message=message
-            )
-        session["user"] = {
-            "uuid": str(found_user["_id"]),
-            "username": found_user["username"],
-            "email": found_user["email"],
-            "phone_number": found_user["phone_number"],
-        }
-        return redirect("/")
-
-    if "user" not in session:
-        return render_template("pages/login.html", user=None)
-
-    found_user = users_collection.find_one({"username": session["user"]["username"]})
-
-    user_data = {
+    return {
         "uuid": str(found_user["_id"]),
         "username": found_user["username"],
         "email": found_user["email"],
         "phone_number": found_user["phone_number"],
     }
 
-    return render_template(
-        "pages/login.html",
-        user=user_data,
-        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
-    )
 
-
-@app.route("/signup")
-def signup_route():
+@app.route("/login")
+def login():
     """
-    This function renders the signup page for new users.
+    This function renders the login page with GET request.
     """
-    if "user" not in session:
-        return render_template("pages/signup.html")
 
-    return redirect("/")
+    if "user" in session:
+        return redirect("/")
+
+    return render_template("pages/login.html", user=get_user_data(session))
 
 
 @app.route("/ai")
@@ -138,20 +99,11 @@ def ai_test_route():
     OpenAI GPT-3 API and send/receive messages in real-time.
     """
     if "user" not in session:
-        return render_template("pages/ai.html", user=None)
-
-    found_user = users_collection.find_one({"username": session["user"]["username"]})
-
-    user_data = {
-        "uuid": str(found_user["_id"]),
-        "username": found_user["username"],
-        "email": found_user["email"],
-        "phone_number": found_user["phone_number"],
-    }
+        return redirect("/")
 
     return render_template(
         "pages/ai.html",
-        user=user_data,
+        user=get_user_data(session),
         user_data={"credits": 69, "subscription_data": "Valid Subscription"},
     )
 
@@ -161,19 +113,7 @@ def home_route():
     """
     This function renders the homepage for authenticated/unauthenticated users.
     """
-    if "user" not in session:
-        return render_template("pages/home.html", user=None)
-
-    found_user = users_collection.find_one({"username": session["user"]["username"]})
-
-    user_data = {
-        "uuid": str(found_user["_id"]),
-        "username": found_user["username"],
-        "email": found_user["email"],
-        "phone_number": found_user["phone_number"],
-    }
-
-    return render_template("pages/home.html", user=user_data)
+    return render_template("pages/home.html", user=get_user_data(session))
 
 
 @app.route("/learn-more")
@@ -181,20 +121,25 @@ def learn_more_route():
     """
     This function renders the learn more page for authenticated/unauthenticated users.
     """
+    return render_template("pages/learn_more.html", user=get_user_data(session))
 
-    if "user" not in session:
-        return render_template("pages/learn_more.html", user=None)
 
-    found_user = users_collection.find_one({"username": session["user"]["username"]})
+@app.route("/policy/<string:policy_name>")
+def policy_route(policy_name):
+    """
+    This function renders the policy page for authenticated/unauthenticated users.
 
-    user_data = {
-        "uuid": str(found_user["_id"]),
-        "username": found_user["username"],
-        "email": found_user["email"],
-        "phone_number": found_user["phone_number"],
-    }
+    It takes a policy name as a parameter.
+    """
+    return render_template(f"policies/{policy_name}.html", user=get_user_data(session))
 
-    return render_template("pages/learn_more.html", user=user_data)
+
+@app.route("/onboarding")
+def onboarding_route():
+    """
+    This function renders the onboarding page for authenticated/unauthenticated users.
+    """
+    return render_template("pages/onboarding.html", user=get_user_data(session))
 
 
 # * Define API routes
@@ -205,4 +150,4 @@ api.add_resource(users.user_management_resource(), "/api/v1/user")
 # * Run flask socketio server
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, port=5000)
+    app.run(port=5000, debug=True)
