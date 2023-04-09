@@ -13,7 +13,6 @@ import openai
 from dotenv import load_dotenv
 from endpoints import users
 from flask import Flask, redirect, render_template, request, session
-from flask_caching import Cache
 from flask_minify import Minify
 from flask_restful import Api
 from pymongo import MongoClient
@@ -31,8 +30,6 @@ openai.api_key = os.getenv("openai")
 app = Flask(__name__)
 
 flask_config = {
-    "CACHE_TYPE": "SimpleCache",
-    "CACHE_DEFAULT_TIMEOUT": 300,
     "SESSION_COOKIE_NAME": "wrld",
     "SESSION_TYPE": "filesystem",
 }
@@ -41,7 +38,6 @@ app.config.from_mapping(flask_config)
 
 Session(app)
 api = Api(app)
-cache = Cache(app)
 Minify(app=app, html=True, js=True, cssless=True)
 
 # * Initialize MongoDB Connection
