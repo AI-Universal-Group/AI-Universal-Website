@@ -31,3 +31,33 @@
     text-align: left;
     margin-top: 10px;
 }
+
+/* Feature box background gradient */
+.feature:nth-child(1) {
+    background: linear-gradient(to bottom right, #F7D49E, #E8A87C);
+}
+
+.feature:nth-child(2) {
+    background: linear-gradient(to bottom right, #FFC3A0, #FFAFBD);
+}
+
+.feature:nth-child(3) {
+    background: linear-gradient(to bottom right, #B4F8C8, #70F5B5);
+}
+
+/* FAQ question background gradient */
+.faq:nth-child(1) {
+    background: linear-gradient(to bottom right, #B2DFFC, #E2E2E2);
+}
+
+.faq:nth-child(2) {
+    background: linear-gradient(to bottom right, #D2FAF7, #F1E4B3);
+}
+
+.faq:nth-child(3) {
+    background: linear-gradient(to bottom right, #FFBCBC, #FFEC99);
+}
+
+.faq:nth-child(4) {
+    background: linear-gradient(to bottom right, #C3E3FC, #AFD6FF);
+}

@@ -3,15 +3,49 @@
     max-width: 1280px;
 }
 
-.example-usage,
-.testimonial {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.5s ease-in-out;
+/* Gradients for example usage boxes */
+.example-usage:nth-child(1) {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
 }
 
-.example-usage.visible,
-.testimonial.visible {
-    opacity: 1;
-    transform: translateY(0);
+.example-usage:nth-child(2) {
+    background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.example-usage:nth-child(3) {
+    background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%);
+}
+
+.testimonial-item {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.testimonial-text {
+    font-size: 1.125rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.testimonial-name {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.testimonial-position {
+    font-size: 1rem;
+}
+
+.gradient-1 {
+    background-image: linear-gradient(45deg, #E74658, #FF8F8F);
+}
+
+.gradient-2 {
+    background-image: linear-gradient(45deg, #5CC6B6, #A5D6CC);
+}
+
+.gradient-3 {
+    background-image: linear-gradient(45deg, #82A8D1, #E2E2E2);
 }

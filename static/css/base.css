@@ -1,9 +1,38 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+
+/* Styles for back-to-top button, which is initially hidden */
+
 #backToTopBtn {
+
+    /* Hides the button */
     display: none;
+
+    /* Positioning */
     position: fixed;
     bottom: 20px;
     right: 20px;
+
+    /* Layering */
     z-index: 100;
+
+    /* Styling */
     border: none;
     outline: none;
     background-color: #007BFF;
@@ -14,8 +43,14 @@
     font-size: 18px;
     opacity: 0.7;
     transition: opacity 0.3s;
+
 }
 
+/* Style changes when the user hovers over the button */
+
 #backToTopBtn:hover {
+
+    /* Makes the button more visible */
     opacity: 1;
+
 }

@@ -1,36 +1,32 @@
-/**
- * @copyright This code is the property of [company name]. You are strictly prohibited from using or distributing this code for personal or commercial purposes without explicit permission from [company name].
- */
-
 // get form elements
-const loginForm = $("#login-form");
-const signupForm = $("#signup-form");
-const loginToggle = $("#login-toggle");
-const signupToggle = $("#signup-toggle");
-const signupMessage = $("#signup-message");
-const toggleMessageLogin = $("#toggle-message-login");
-const toggleMessageSignup = $("#toggle-message-signup");
+const $loginForm = $("#login-form");
+const $signupForm = $("#signup-form");
+const $loginToggle = $("#login-toggle");
+const $signupToggle = $("#signup-toggle");
+const $signupMessage = $("#signup-message");
+const $toggleMessageLogin = $("#toggle-message-login");
+const $toggleMessageSignup = $("#toggle-message-signup");
 
 // add event listeners
-loginForm.on("submit", handleLogin);
-signupForm.on("submit", handleSignup);
-loginToggle.on("click", toggleForms);
-signupToggle.on("click", toggleForms);
+$loginForm.on("submit", handleLogin);
+$signupForm.on("submit", handleSignup);
+$loginToggle.on("click", toggleForms);
+$signupToggle.on("click", toggleForms);
 
 /**
  * Handle login form submission
  * @param {object} event - Form submission event object
  */
 async function handleLogin(event) {
-    event.preventDefault(); // prevent default form behavior
+    event.preventDefault();
 
-    const username = $("#username").val();
-    const password = $("#password").val();
+    const $username = $("#username");
+    const $password = $("#password");
 
     try {
         const response = await fetch("/api/v1/user", {
             method: "POST",
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username: $username.val(), password: $password.val() }),
             headers: { "Content-Type": "application/json" },
         });
 
@@ -42,7 +38,7 @@ async function handleLogin(event) {
         displayUserData(data.data);
         window.location.replace("/");
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message, "#error-popup");
     }
 }
 
@@ -51,17 +47,17 @@ async function handleLogin(event) {
  * @param {object} event - Form submission event object
  */
 async function handleSignup(event) {
-    event.preventDefault(); // prevent default form behavior
+    event.preventDefault();
 
-    const username = $("#new-username").val();
-    const email = $("#new-email").val();
-    const password = $("#new-password").val();
-    const phone_number = $("#phone-number").val();
+    const $newUsername = $("#new-username");
+    const $newEmail = $("#new-email");
+    const $newPassword = $("#new-password");
+    const $phoneNumber = $("#phone-number");
 
     try {
         const response = await fetch("/api/v1/user", {
             method: "PUT",
-            body: JSON.stringify({ username, email, password, phone_number }),
+            body: JSON.stringify({ username: $newUsername.val(), email: $newEmail.val(), password: $newPassword.val(), phone_number: $phoneNumber.val() }),
             headers: { "Content-Type": "application/json" },
         });
 
@@ -69,20 +65,20 @@ async function handleSignup(event) {
             throw new Error("Failed to signup");
         }
 
-        displayError("Signup successful, please sign in.");
+        displayError("Signup successful, please sign in.", "#signup-message");
         toggleForms();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message, "#error-popup");
     }
 }
 
 // toggle between login and signup forms
 function toggleForms() {
-    loginForm.toggleClass("hidden");
-    signupForm.toggleClass("hidden");
-    signupMessage.addClass("hidden");
-    toggleMessageLogin.toggleClass("hidden");
-    toggleMessageSignup.toggleClass("hidden");
+    $loginForm.toggleClass("hidden");
+    $signupForm.toggleClass("hidden");
+    $signupMessage.addClass("hidden");
+    $toggleMessageLogin.toggleClass("hidden");
+    $toggleMessageSignup.toggleClass("hidden");
 }
 
 /**
@@ -99,27 +95,15 @@ function displayUserData(data) {
 }
 
 /**
- * Display error message in popup
- * @param {string} message - Error message to display
- */
-function displayError(message) {
-    const errorPopup = $("#error-popup");
-    errorPopup.html(message);
-    errorPopup.removeClass("hidden");
-    setTimeout(() => {
-        errorPopup.addClass("hidden");
-    }, 3000);
-}
-
-/**
  * Display message in popup
  * @param {string} message - Message to display
+ * @param {string} elementId - ID of the DOM element to display the message in
  */
-function displayError(message) {
-    const errorPopup = $("#popup");
-    errorPopup.html(message);
-    errorPopup.removeClass("hidden");
+function displayError(message, elementId) {
+    const $element = $(elementId);
+    $element.html(message);
+    $element.removeClass("hidden");
     setTimeout(() => {
-        errorPopup.addClass("hidden");
+        $element.addClass("hidden");
     }, 3000);
 }
