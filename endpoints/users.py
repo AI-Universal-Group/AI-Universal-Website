@@ -8,10 +8,11 @@ for commercial or personal purposes without the express written consent of the o
 
 import hashlib
 import os
+import requests
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import session, jsonify, make_response
+from flask import session, jsonify, make_response, request
 from flask_restful import Resource, reqparse
 from pymongo import MongoClient
 
@@ -91,8 +92,6 @@ class UserManagement(Resource):
         username = args["username"]
         password = args["password"]
         logout = args["logout"]
-
-        print(f"Recived Request: {username}, {password}")
 
         if logout:
             session.pop("user", None)

@@ -31,6 +31,33 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MW6SP46" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <div id="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+            {% set class = '' %}
+            {% if category == 'error' %}
+            {% set class = 'error' %}
+            {% elif category == 'warning' %}
+            {% set class = 'warning' %}
+            {% elif category == 'info' %}
+            {% set class = 'info' %}
+            {% endif %}
+            <li class="{{ class }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+
+    </div>
+
+    <div id="flash-messages" style="display: none;">
+        <ul class="flashes"></ul>
+    </div>
+
     <!-- Navigation Bar-->
     <nav class="flex justify-between items-center py-4 px-8 bg-gray-100 text-gray-900 border-b border-gray-200">
         <div class="flex items-center">
@@ -47,8 +74,12 @@
             </ul>
         </div>
         <div class="flex items-center">
-            <a href="#" class="text-gray-900 hover:text-blue-600 mr-4">Sign In</a>
-            <a href="#" class="text-gray-900 hover:text-blue-600">Sign Up</a>
+            {% if user %}
+            <a href="/dashboard" class="text-gray-900 hover:text-blue-600 mr-4">Dashboard</a>
+            {% else %}
+            <a href="/login" class="text-gray-900 hover:text-blue-600 mr-4">Log In</a>
+            <a href="/signup" class="text-gray-900 hover:text-blue-600">Sign up</a>
+            {% endif %}
         </div>
     </nav>
     <!-- End Navigation Bar -->
@@ -105,6 +136,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js"
     integrity="sha512-HaoDYc3PGduguBWOSToNc0AWGHBi2Y432Ssp3wNIdlOzrunCtB2qq6FrhtPbo+PlbvRbyi86dr5VQx61eg/daQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LcglHklAAAAAHByD3vbfkrdYzOMsz13SE9-ic1d"></script>
 <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 {% block js %}{% endblock %}
 

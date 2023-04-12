@@ -13,15 +13,49 @@
         <div class="onboarding-steps">
             <div class="step active" id="step1">
                 <h3 class="text-2xl font-bold mb-4">Create an Account</h3>
-                <form id="signupForm">
-                    <input type="text" id="username" placeholder="Username" class="form-input mb-4" />
-                    <input type="email" id="email" placeholder="Email" class="form-input mb-4" />
-                    <input type="number" id="phoneNumber" placeholder="Phone Number" class="form-input mb-4" />
-                    <input type="password" id="password" placeholder="Password" class="form-input mb-4" />
-                    <button type="submit"
-                        class="submit-btn bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign
-                        Up</button>
-                </form>
+                <div class="bg-white shadow-lg rounded-lg p-6">
+                    <!-- signup form -->
+                    <form id="signup-form">
+                        <!-- username input -->
+                        <div class="mb-4">
+                            <label for="new-username" class="block text-gray-700 font-bold mb-2">Username</label>
+                            <input type="text" name="new-username" id="new-username" placeholder="Your Username"
+                                required
+                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <!-- email input -->
+                        <div class="mb-4">
+                            <label for="new-email" class="block text-gray-700 font-bold mb-2">Email address</label>
+                            <input type="email" name="new-email" id="new-email" placeholder="you@example.com" required
+                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <!-- password input -->
+                        <div class="mb-6">
+                            <label for="new-password" class="block text-gray-700 font-bold mb-2">Password</label>
+                            <input type="password" name="new-password" id="new-password" placeholder="***********"
+                                required
+                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <!-- phone number input -->
+                        <div class="mb-6">
+                            <label for="phone-number" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+                            <input type="text" name="phone-number" id="phone-number" placeholder="+1 234-567-8901"
+                                required
+                                class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <!-- submit button -->
+                        <div class="flex items-center justify-between">
+                            <button type="submit" id="signup-button"
+                                class="bg-gradient-to-r from-blue-700 to-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Signup
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="step" id="step2">
                 <h3 class="text-2xl font-bold mb-4">How It Works</h3>

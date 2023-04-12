@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+
+<script>
+    render = "{{ render }}"
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login-signup.css') }}">
+{% endblock %}
+{% block body %}
+
+<div id="main-container" class="bg">
+    <div id="content-wrapper">
+        <div class="w-full max-w-md">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <!-- signup form -->
+                <form id="signup-form" action="/signup" method="POST">
+                    <h2 class="text-3xl font-bold mb-6">Signup</h2>
+                    <!-- username input -->
+                    <div class="mb-4">
+                        <label for="new-username" class="block text-gray-700 font-bold mb-2">Username</label>
+                        <input type="text" name="username" id="username" placeholder="Your Username" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <!-- email input -->
+                    <div class="mb-4">
+                        <label for="new-email" class="block text-gray-700 font-bold mb-2">Email address</label>
+                        <input type="email" name="email" id="email" placeholder="you@example.com" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <!-- password input -->
+                    <div class="mb-6">
+                        <label for="new-password" class="block text-gray-700 font-bold mb-2">Password</label>
+                        <input type="password" name="password" id="password" placeholder="***********" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <!-- phone number input -->
+                    <div class="mb-6">
+                        <label for="phone-number" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+                        <input type="text" name="phone-number" id="phone-number" placeholder="+1 234-567-8901" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-signup" required>
+
+                    <!-- submit button -->
+                    <div class="flex items-center justify-between">
+                        <button type="submit" id="signup-button"
+                            class="bg-gradient-to-r from-blue-700 to-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Signup
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="text-center mt-4 bg-white shadow-lg rounded-lg p-2">
+                <p class="text-black">
+                    Already have an account?
+                    <a href="/login" class="text-blue-600">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/login-signup.js') }}"></script>
+{% endblock %}

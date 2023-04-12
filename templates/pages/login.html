@@ -3,100 +3,57 @@
 {% block title %}Login{% endblock %}
 
 {% block head %}
+<script>
+    render = "{{ render }}"
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login-signup.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- center the main div in the center of the page, ensure it is resposive. -->
-<div class="flex items-center justify-center h-screen">
-    <div class="w-full max-w-md">
-        <!-- login form -->
-        <form id="login-form" class="bg-white shadow-lg rounded-lg p-6">
-            <!-- username / email input -->
-            <div class="mb-4">
-                <label for="username" class="block text-gray-700 font-bold mb-2">Username / Email</label>
-                <input type="text" name="username" id="username" placeholder="you@example.com" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+<div id="main-container" class="bg">
+    <div id="content-wrapper">
+        <div class="w-full max-w-md">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <!-- login form -->
+                <form id="login-form" action="/login" method="POST">
+                    <h2 class="text-3xl font-bold mb-6">Login</h2>
+                    <!-- username / email input -->
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-700 font-bold mb-2">Username / Email</label>
+                        <input type="text" name="username" id="username" placeholder="you@example.com" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <!-- password input -->
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+                        <input type="password" name="password" id="password" placeholder="***********" required
+                            class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-login">
+
+                    <!-- submit button -->
+                    <div class="flex items-center justify-between">
+                        <button type="submit" id="login-button"
+                            class="bg-gradient-to-r from-blue-700 to-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Sign In
+                        </button>
+                    </div>
+                    <p class="hidden" id="signup-message">Signed up! Please now login.</p>
+                </form>
             </div>
-
-            <!-- password input -->
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-                <input type="password" name="password" id="password" placeholder="***********" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div class="text-center mt-4 bg-white shadow-lg rounded-lg p-2">
+                <p class="text-black">
+                    Don't have an account?
+                    <a href="/signup" class="text-blue-600">Signup here</a>
+                </p>
             </div>
-
-            <!-- submit button -->
-            <div class="flex items-center justify-between">
-                <button type="submit" id="login-button"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Sign In
-                </button>
-            </div>
-            <p class="hidden" id="signup-message">Signed up! Please now login.</p>
-        </form>
-
-        <!-- signup form -->
-        <form id="signup-form" class="bg-white shadow-lg rounded-lg p-6 hidden">
-            <!-- username input -->
-            <div class="mb-4">
-                <label for="new-username" class="block text-gray-700 font-bold mb-2">Username</label>
-                <input type="text" name="new-username" id="new-username" placeholder="Your Username" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-
-            <!-- email input -->
-            <div class="mb-4">
-                <label for="new-email" class="block text-gray-700 font-bold mb-2">Email address</label>
-                <input type="email" name="new-email" id="new-email" placeholder="you@example.com" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-
-            <!-- password input -->
-            <div class="mb-6">
-                <label for="new-password" class="block text-gray-700 font-bold mb-2">Password</label>
-                <input type="password" name="new-password" id="new-password" placeholder="***********" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-
-            <!-- phone number input -->
-            <div class="mb-6">
-                <label for="phone-number" class="block text-gray-700 font-bold mb-2">Phone Number</label>
-                <input type="text" name="phone-number" id="phone-number" placeholder="+1 234-567-8901" required
-                    class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-
-            <!-- submit button -->
-            <div class="flex items-center justify-between">
-                <button type="submit" id="signup-button"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Signup
-                </button>
-            </div>
-        </form>
-
-        <!-- toggle login/signup forms-->
-        <p id="toggle-message-signup" class="hidden text-white">
-            Already have an account?
-            <a href="#" id="login-toggle" class="text-blue-400">Login here</a>
-        </p>
-        <p id="toggle-message-login" class="text-white">
-            Don't have an account?
-            <a href="#" id="signup-toggle" class="text-blue-400">Signup here</a>
-        </p>
-    </div>
-
-    <!-- error message popup -->
-    <div id="error-popup" class="absolute top-0 right-0 mr-4 mt-4 bg-red-500 text-white px-4 py-2 rounded hidden">
-    </div>
-    <!-- message popup -->
-    <div id="popup" class="absolute top-0 right-0 mr-4 mt-4 bg-green-500 text-white px-4 py-2 rounded hidden">
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
-    integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+<script src="{{ url_for('static', filename='js/login-signup.js') }}"></script>
 {% endblock %}

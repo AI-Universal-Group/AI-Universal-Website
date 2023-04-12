@@ -1,0 +1,38 @@
+.owner-card,
+.staff-card {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fade-up 0.5s ease-out forwards;
+}
+
+.owner-card:nth-child(1) {
+    background: linear-gradient(to bottom, #e6cfe6, #b7b5e4);
+    animation-delay: 0.2s;
+}
+
+.owner-card:nth-child(2) {
+    background: linear-gradient(to bottom, #e8e3c7, #f4b3c2);
+    animation-delay: 0.4s;
+}
+
+.owner-card:nth-child(3) {
+    background: linear-gradient(to bottom, #c2e0cc, #7aa5c9);
+    animation-delay: 0.6s;
+}
+
+.staff-card:nth-child(1) {
+    background: linear-gradient(to bottom, #b7b5e4, #f4b3c2);
+    animation-delay: 0.8s;
+}
+
+.staff-card:nth-child(2) {
+    background: linear-gradient(to bottom, #d1d5da, #c2e0cc);
+    animation-delay: 1.2s;
+}
+
+@keyframes fade-up {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

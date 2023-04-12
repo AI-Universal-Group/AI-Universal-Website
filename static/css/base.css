@@ -1,41 +1,35 @@
+/* Sets the height of the HTML and body elements to 100% (full screen height) */
 html,
 body {
     height: 100%;
 }
 
+/* Sets the display style of the body element to "flex" with main axis direction as "column" */
 body {
     display: flex;
     flex-direction: column;
 }
 
+/* Sets the flex property of the main element to "1" which means it'll take up all available space */
 main {
     flex: 1;
 }
 
+/* Prevents the footer element from getting smaller than its content */
 footer {
     flex-shrink: 0;
 }
 
-
-/* Styles for back-to-top button, which is initially hidden */
-
+/* Styles for the back-to-top button that isn't displayed by default */
 #backToTopBtn {
-
-    /* Hides the button */
     display: none;
-
-    /* Positioning */
     position: fixed;
     bottom: 20px;
-    right: 20px;
-
-    /* Layering */
+    left: 20px;
     z-index: 100;
-
-    /* Styling */
     border: none;
     outline: none;
-    background-color: #007BFF;
+    background-image: linear-gradient(to right, #4299e1, #2b6cb0);
     color: white;
     cursor: pointer;
     padding: 15px;
@@ -43,14 +37,47 @@ footer {
     font-size: 18px;
     opacity: 0.7;
     transition: opacity 0.3s;
-
 }
 
-/* Style changes when the user hovers over the button */
-
+/* Changes the opacity of the back-to-top button on hover */
 #backToTopBtn:hover {
-
-    /* Makes the button more visible */
     opacity: 1;
+}
 
+.flashes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.flashes li {
+    background-color: #af2828;
+    color: white;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    animation: fadeInOut 1s ease-in-out;
+}
+
+.flashes li:first-child {
+    margin-top: 0;
+}
+
+.error {
+    background-color: #ff4d4d;
+    color: #fff;
+}
+
+.warning {
+    background-color: #ffad33;
+    color: #fff;
+}
+
+.info {
+    background-color: #4da6ff;
+    color: #fff;
 }

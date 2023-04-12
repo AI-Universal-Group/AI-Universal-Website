@@ -32,3 +32,11 @@ $(function () {
         return false;
     });
 });
+
+$(document).ready(function () {
+    setTimeout(function () {
+        $('#flash-messages').fadeOut('slow');
+    }, 2000); // 5000 milliseconds = 5 seconds
+});
+
+window.addEventListener('load', AOS.refresh());
