@@ -1,4 +1,5 @@
 .owner-card,
+.tech-card,
 .staff-card {
     opacity: 0;
     transform: translateY(50px);
@@ -28,6 +29,26 @@
 .staff-card:nth-child(2) {
     background: linear-gradient(to bottom, #d1d5da, #c2e0cc);
     animation-delay: 1.2s;
+}
+
+.tech-card:nth-child(1) {
+    background: linear-gradient(to bottom, #ffc5cf, #ffe3c5);
+    animation-delay: 1.4s;
+}
+
+.tech-card:nth-child(2) {
+    background: linear-gradient(to bottom, #b2dfdb, #d6c2ff);
+    animation-delay: 1.6s;
+}
+
+.tech-card:nth-child(3) {
+    background: linear-gradient(to bottom, #ffd1c5, #fff3c5);
+    animation-delay: 1.8s;
+}
+
+.tech-card:nth-child(4) {
+    background: linear-gradient(to bottom, #c5d1ff, #ffc5d1);
+    animation-delay: 2s;
 }
 
 @keyframes fade-up {

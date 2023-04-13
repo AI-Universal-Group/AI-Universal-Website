@@ -1,7 +1,20 @@
-.policy-section {
-    margin-bottom: 1.5rem;
+.policy {
+    background: linear-gradient(45deg, #F17C58, #E94584, #24AADB, #27DBB1, #FFDC18, #FF3706);
+    background-size: 600% 200%;
+    background-repeat: no-repeat;
+    animation: gradient 16s linear infinite;
+    animation-direction: alternate;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    border-radius: 5px;
 }
 
-.content {
-    padding-bottom: 3rem;
+@keyframes gradient {
+    0% {
+        background-position: 0%
+    }
+
+    100% {
+        background-position: 100%
+    }
 }

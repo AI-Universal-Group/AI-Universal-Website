@@ -3,11 +3,10 @@
 {% block title %}Credits{% endblock %}
 
 {% block head %}
-
 <link rel="stylesheet" href="{{ url_for('static', filename='css/credits.css') }}">
 {% endblock %}
-{% block body %}
 
+{% block body %}
 <section class="bg-white text-gray-900 py-20">
     <div class="container mx-auto px-4">
         <h1 class="text-4xl font-bold mb-6">Owners</h1>
@@ -19,30 +18,27 @@
                     class="h-32 w-32 mx-auto mb-4 rounded-full">
                 <h3 class="text-2xl font-bold mb-2">Zach Lagden</h3>
                 <p class="text-xl text-gray-600 mb-4">Co-Owner and Lead Developer</p>
-                <p>Zach, who serves as both a co-owner and the lead developer at AI Universal, not only oversees the
-                    platform's overall architecture and development but also directs the company as a whole.
-                    Additionally, he is involved in pretty much every aspect of the business.</p>
-                <p class="hidden">HA SIKE, I'm the best person here shut it. I am cool and epic!! Fr tho, love all the
-                    staff.</p>
+                <p>Zach is a co-founder, co-owner, and the lead developer at AI Universal. He is responsible for the
+                    platform's overall architecture and development, and directs the company as a whole. Zach is
+                    involved in nearly every aspect of the business.</p>
             </div>
             <div class="owner-card bg-gray-100 p-6 rounded-lg">
                 <img src="{{ url_for('static', filename='images/credits_austin.jpg') }}" alt="Developer 2"
                     class="h-32 w-32 mx-auto mb-4 rounded-full">
                 <h3 class="text-2xl font-bold mb-2">Austin Coveney</h3>
                 <p class="text-xl text-gray-600 mb-4">Co-Owner and Director of Operations</p>
-                <p>Austin, who is a co-founder and co-owner of the company, serves as its director and assumes the
-                    responsibility of overseeing all aspects of the organization. He manages and supervises the
-                    company's operations, ensuring the effective and efficient functioning of all departments.</p>
+                <p>Austin is a co-founder and co-owner of AI Universal. In his role as Director of Operations, he
+                    oversees all aspects of the organization, ensuring the effective and efficient functioning of all
+                    departments. Austin is involved in nearly every aspect of the business.</p>
             </div>
             <div class="owner-card bg-gray-100 p-6 rounded-lg">
                 <img src="{{ url_for('static', filename='images/credits_thijs.jpg') }}" alt="Developer 3"
                     class="h-32 w-32 mx-auto mb-4 rounded-full">
                 <h3 class="text-2xl font-bold mb-2">Thijs Koolen</h3>
                 <p class="text-xl text-gray-600 mb-4">Co-Owner and Multi-Disciplinary Manager</p>
-                <p>Thijs plays a crucial role in the success of the
-                    company as he not only co-owns and founded it, but
-                    also actively contributes to its marketing strategies, manages the accounting, and oversees the
-                    design process.</p>
+                <p>Thijs is a co-founder and co-owner of AI Universal. As a multi-disciplinary manager, he contributes
+                    to the company's marketing strategies, manages the accounting, and oversees the design process,
+                    playing a crucial role in its success.</p>
             </div>
         </div>
         <hr class="my-12 border-gray-300">
@@ -51,23 +47,74 @@
             AI Universal:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="staff-card bg-gray-100 p-4 rounded-lg">
-                <img src="https://cdn.discordapp.com/avatars/480135957270757377/7c1d9eaebe37a98bd4fbdbe9a4697b4d.webp?size=128"
-                    alt="Staff Member 1" class="h-32 w-32 mx-auto mb-4 rounded-full">
                 <h3 class="text-xl font-bold mb-2">Saul Walker</h3>
                 <p class="text-lg text-gray-600 mb-4">Software Developer</p>
-                <p>Saul is a talented software developer who has worked on several key features of the platform. He is
-                    skilled in several programming languages and has a keen eye for detail.</p>
+                <p>Saul is a skilled software developer who has contributed to several key features of the platform. He
+                    is proficient in various programming languages and has a keen eye for detail.</p>
             </div>
             <div class="staff-card bg-gray-100 p-4 rounded-lg">
-                <img src="https://cdn.discordapp.com/avatars/1093943126273568829/cb0dafd78badfaf0a7337435dcadaa56.webp?size=80"
-                    alt="Staff Member 2" class="h-32 w-32 mx-auto mb-4 rounded-full">
                 <h3 class="text-xl font-bold mb-2">Joris Baliukonis</h3>
                 <p class="text-lg text-gray-600 mb-4">Marketing Manager</p>
-                <p>Joris is responsible for developing and implementing the marketing strategy for AI Universal. He is
-                    skilled in several marketing techniques and has a keen understanding of the target audience.</p>
+                <p>Joris is the Marketing Manager for AI Universal. He is responsible for developing and implementing
+                    marketing strategies, and has a deep understanding of the target audience and various marketing
+                    techniques.</p>
             </div>
         </div>
+        <hr class="my-12 border-gray-300">
+        <h2 class="text-2xl font-bold mb-6">Technology Used</h2>
+        <p class="text-lg mb-8">Our platform is built using state-of-the-art technologies to ensure a seamless user
+            experience and robust performance. Here's an overview of the key technologies we use:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="tech-card bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-2">Languages & Frameworks</h3>
+                <p>Our platform is built using Python with the Flask framework and PyMongo for backend development. For
+                    the frontend, we use HTML, CSS (Tailwind), and JavaScript (Jquery).</p>
+            </div>
+            <div class="tech-card bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-2">Database</h3>
+                <p>We use MongoDB Atlas, a fully managed cloud database service, to ensure high availability,
+                    scalability, and performance for our platform.</p>
+                <a href="https://www.mongodb.com/cloud/atlas" target="_blank"
+                    class="text-blue-500 hover:text-blue-700">Learn more about MongoDB Atlas</a>
+            </div>
+            <div class="tech-card bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-2">AI & Machine Learning</h3>
+                <p>Our platform integrates OpenAI's GPT models to deliver cutting-edge AI-powered solutions for our
+                    users.</p>
+                <a href="https://www.openai.com/" target="_blank" class="text-blue-500 hover:text-blue-700">Learn more
+                    about OpenAI</a>
+            </div>
+            <div class="tech-card bg-gray-100 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-2">Third-Party Integrations</h3>
+                <p>We utilize a variety of third-party integrations to enhance the functionality and performance of our
+                    platform, including Google Analytics, Google Tag Manager, Google reCAPTCHA, and Smartlook analytics.
+                </p>
+                <ul class="list-disc pl-5">
+                    <li>
+                        <a href="https://analytics.google.com/" target="_blank"
+                            class="text-blue-500 hover:text-blue-700">Google Analytics</a>
+                    </li>
+                    <li>
+                        <a href="https://tagmanager.google.com/" target="_blank"
+                            class="text-blue-500 hover:text-blue-700">Google Tag Manager</a>
+                    </li>
+                    <li>
+                        <a href="https://www.google.com/recaptcha" target="_blank"
+                            class="text-blue-500 hover:text-blue-700">Google reCAPTCHA</a>
+                    </li>
+                    <li>
+                        <a href="https://www.smartlook.com/" target="_blank"
+                            class="text-blue-500 hover:text-blue-700">Smartlook analytics</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
     </div>
 
 </section>
+{% endblock %}
+
+{% block js %}
 {% endblock %}

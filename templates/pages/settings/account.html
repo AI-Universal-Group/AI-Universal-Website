@@ -1,0 +1,29 @@
+{% extends 'pages/settings/settings_base.html' %}
+
+{% block settings_title %}My Account{% endblock %}
+
+{% block settings_head %}
+<style>
+    #navigation_links li:nth-child(1) {
+        color: black;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-10">
+    <h1 class="text-2xl font-semibold mb-4">My Account</h1>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Account Information</h2>
+        <ul class="text-gray-700">
+            <li class="mb-4"><strong>Name:</strong> {{ user.name }}</li>
+            <li class="mb-4"><strong>Email:</strong> {{ user.email }}</li>
+            <li class="mb-4"><strong>Phone:</strong> {{ user.phone }}</li>
+            <li class="mb-4"><strong>Subscription Type:</strong> {{ user.subscription.type }}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block settings_js %}
+{% endblock %}

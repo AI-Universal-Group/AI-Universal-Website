@@ -1,0 +1,26 @@
+{% extends 'pages/settings/settings_base.html' %}
+
+{% block settings_title %}Advanced Settings{% endblock %}
+
+{% block settings_head %}
+<style>
+    #navigation_links li:nth-child(2) {
+        color: black;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-10">
+    <h1 class="text-2xl font-semibold mb-4">Advanced Settings</h1>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Accessability</h2>
+        <ul class="text-gray-700">
+            <li class="mb-4"><strong>Filler: </strong>Text</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block settings_js %}
+{% endblock %}

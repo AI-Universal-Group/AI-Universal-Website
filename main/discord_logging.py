@@ -1,12 +1,7 @@
 """
-(c) 2023 Zach Lagden
-This code is protected by copyright and can only be used for non-commercial purposes.
-Any commercial use or reproduction in whole or part of this code without the expressed
-written permission from the author is strictly prohibited.
-
-The code provides a DiscordWebhookHandler class that enables logging to a Discord Webhook.
-The handler takes `webhook_url`, `username` and `avatar_url` as arguments to send log records
-to a specific webhook with appropriate colors assigned to the different log levels.
+(C) Zach Lagden 2023 All Rights Reserved.
+This code may not be used, copied, distributed, or reproduced in part or in whole
+for commercial or personal purposes without the express written consent of the owner. 
 """
 
 import logging

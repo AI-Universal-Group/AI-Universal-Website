@@ -1,0 +1,29 @@
+{% extends 'pages/settings/settings_base.html' %}
+
+{% block settings_title %}Subscription{% endblock %}
+
+{% block settings_head %}
+<style>
+    #navigation_links li:nth-child(2) {
+        color: black;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col-span-10">
+    <h1 class="text-2xl font-semibold mb-4">My Subscription</h1>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Subscription Information</h2>
+        <ul class="text-gray-700">
+            <li class="mb-4"><strong>Type:</strong> {{ user.subscription.type }}</li>
+            <li class="mb-4"><strong>Next Payment:</strong> {{ user.subscription.next_billing_date }}</li>
+            <li class="mb-4"><strong>Last Payment:</strong> {{ user.subscription.last_billing_date }}</li>
+            <li class="mb-4"><strong>Credit Balance:</strong> ${{ user.subscription.credit }}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block settings_js %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{% block settings_title %}{% endblock %}{% endblock %}
+
+{% block head %}
+{% block settings_head %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+<div class="container mx-auto py-8">
+    <div class="grid grid-cols-12 gap-4">
+        <!-- Sidebar -->
+        <div class="col-span-2">
+            <h2 class="text-lg font-semibold mb-4">Navigation</h2>
+            <ul class="text-gray-700" id="navigation_links">
+                <li class="mb-4 hover:text-gray-900"><a href="{{ url_for('settings_routes.settings_route') }}">My
+                        Account</a>
+                </li>
+                <li class="mb-4 hover:text-gray-900"><a
+                        href="{{ url_for('settings_routes.settings_subscription_route') }}">Subscription</a>
+                </li>
+                <li class="mb-4 hover:text-gray-900"><a
+                        href="{{ url_for('settings_routes.settings_advanced_route') }}">Advanced Settings</a></li>
+            </ul>
+        </div>
+        <!-- End Sidebar -->
+
+        {% block content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% block settings_js %}{% endblock %}
+{% endblock %}

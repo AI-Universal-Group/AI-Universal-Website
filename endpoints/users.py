@@ -1,6 +1,4 @@
 """
-Flask Restful API for user management.
-
 (C) Zach Lagden 2023 All Rights Reserved.
 This code may not be used, copied, distributed, or reproduced in part or in whole
 for commercial or personal purposes without the express written consent of the owner. 
@@ -8,11 +6,10 @@ for commercial or personal purposes without the express written consent of the o
 
 import hashlib
 import os
-import requests
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import session, jsonify, make_response, request
+from flask import jsonify, make_response, request, session
 from flask_restful import Resource, reqparse
 from pymongo import MongoClient
 
