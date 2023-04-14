@@ -227,7 +227,7 @@ def signup_route():
                 "phone_number": phone_number,
             }
             flash("Your account has been created successfully!", "info")
-            return redirect(url_for("main_routes.home_route"))
+            return redirect(url_for("app_routes.onboarding_route"))
 
         except Exception as e:
             flash(
@@ -267,24 +267,6 @@ def policy_route(policy_name):
     """
 
     return render_template(f"policies/{policy_name}.html", user=get_user_data(session))
-
-
-@blueprint.route("/onboarding")
-def onboarding_route():
-    """
-    This function generates onboarding page.
-
-    Args:
-    None
-
-    Returns:
-    Renders onboarding page.
-    """
-
-    if "user" in session:
-        return redirect(url_for("app_routes.app_route"))
-
-    return render_template("pages/onboarding.html", user=get_user_data(session))
 
 
 @blueprint.route("/credits")

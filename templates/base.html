@@ -54,10 +54,6 @@
 
     </div>
 
-    <div id="flash-messages" style="display: none;">
-        <ul class="flashes"></ul>
-    </div>
-
     <!-- Navigation Bar-->
     <nav class="flex justify-between items-center py-4 px-8 bg-gray-100 text-gray-900 border-b border-gray-200">
         <div class="flex items-center">
@@ -77,8 +73,7 @@
             {% if user %}
             <a href="/dashboard" class="text-gray-900 hover:text-blue-600 mr-4">Dashboard</a>
             {% else %}
-            <a href="/login" class="text-gray-900 hover:text-blue-600 mr-4">Log In</a>
-            <a href="/signup" class="text-gray-900 hover:text-blue-600">Sign up</a>
+            <a href="/login" class="text-gray-900 hover:text-blue-600 mr-4">Log In / Sign Up</a>
             {% endif %}
         </div>
     </nav>

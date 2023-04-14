@@ -14,7 +14,7 @@ from flask_restful import Api
 from pymongo import MongoClient
 from flask_session import Session
 
-from main.helpers import get_user_data
+from internal.helpers import get_user_data
 from endpoints import users, app_routes, main_routes, settings_routes
 
 load_dotenv()
@@ -31,7 +31,6 @@ openai.api_key = os.getenv("openai")
 app = Flask(__name__)
 
 # Flask Blueprint Configurations
-
 app.register_blueprint(main_routes.blueprint)
 app.register_blueprint(app_routes.blueprint)
 app.register_blueprint(settings_routes.blueprint)
@@ -42,6 +41,8 @@ flask_config = {
     "SESSION_TYPE": "filesystem",
 }
 app.config.from_mapping(flask_config)
+
+# Flask Extensions
 Session(app)
 api = Api(app)
 
