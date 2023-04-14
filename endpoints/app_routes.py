@@ -18,16 +18,16 @@ from flask import (
     session,
     url_for,
 )
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 
 load_dotenv()
 
 # MongoDB Connection
-mongo = PyMongo()
-mongo.init_app(app)
-users_collection = mongo.db.users
-settings_collection = mongo.db.settings
-user_information_collection = mongo.db.user_information
+client = MongoClient(os.getenv("mongodb"), connect=False)
+user_data_db = client["user_data"]
+users_collection = user_data_db["users"]
+settings_collection = user_data_db["settings"]
+user_information_collection = user_data_db["user_information"]
 
 # reCAPTCHA Secret Key
 RECAPTCHA_SECRET_KEY = os.getenv("recaptcha_secret_key")

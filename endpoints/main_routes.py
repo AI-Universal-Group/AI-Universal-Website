@@ -18,13 +18,16 @@ from flask import (
     session,
     url_for,
 )
-from flask_pymongo import PyMongo
+from pymongo import MongoClient
 
 load_dotenv()
 
-app = Flask(__name__)
-app.config["MONGO_URI"] = os.environ.get("mongodb")
-mongo = PyMongo(app)
+# MongoDB Connection
+client = MongoClient(os.getenv("mongodb"), connect=False)
+user_data_db = client["user_data"]
+users_collection = user_data_db["users"]
+settings_collection = user_data_db["settings"]
+user_information_collection = user_data_db["user_information"]
 
 # reCAPTCHA Secret Key
 RECAPTCHA_SECRET_KEY = os.getenv("recaptcha_secret_key")
@@ -39,16 +42,16 @@ def get_user_data(route_session):
     This function returns user data if user exists else None.
 
     Args:
-        route_session: session object
+    route_session: session object
 
     Returns:
-        dictionary consisting of user data
+    dictionary consisting of user data
     """
 
     if "user" not in route_session:
         return None
 
-    found_user = mongo.db.users.find_one(
+    found_user = users_collection.find_one(
         {"username": route_session["user"]["username"]}
     )
 
@@ -65,15 +68,17 @@ def verify_recaptcha(response):
     Verify reCAPTCHA token and returns True if valid, False otherwise.
 
     Args:
-        response: google recaptcha response
+    response: google recaptcha response
 
     Returns:
-        boolean (True/False)
+    boolean (True/False)
     """
+    print(RECAPTCHA_SECRET_KEY)
     params = {"secret": RECAPTCHA_SECRET_KEY, "response": response}
     response = requests.post(
         "https://www.google.com/recaptcha/api/siteverify", params=params
     )
+    print(response.json())
     return response.json().get("success", False)
 
 
@@ -86,10 +91,10 @@ def home_route():
     This function generates homepage.
 
     Args:
-        None
+    None
 
     Returns:
-        Renders homepage.
+    Renders homepage.
     """
 
     return render_template("pages/home.html", user=get_user_data(session))
@@ -101,17 +106,18 @@ def login_route():
     This function is to login user provided the credentials are correct.
 
     Args:
-        None
+    None
 
     Returns:
-        Redirects to homepage on successful login.
-        Renders login page on GET request.
+    Redirects to homepage on successful login.
+    Renders login page on GET request.
     """
 
     if "user" in session:
         return redirect(url_for("app_routes.app_route"))
 
     if request.method == "POST":
+        print(request.form)
         # Verify reCAPTCHA token
         if not verify_recaptcha(request.form.get("g-recaptcha-response")):
             # reCAPTCHA verification failed
@@ -128,7 +134,7 @@ def login_route():
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        found_user = mongo.db.users.find_one(
+        found_user = users_collection.find_one(
             {"username": username, "password": hashed_password}
         )
 
@@ -154,11 +160,11 @@ def signup_route():
     This function is to register a new user provided the credentials are valid.
 
     Args:
-        None
+    None
 
     Returns:
-        Redirects to homepage on successful registration.
-        Renders signup page on GET request.
+    Redirects to homepage on successful registration.
+    Renders signup page on GET request.
     """
 
     if "user" in session:
@@ -186,7 +192,7 @@ def signup_route():
 
         # Create user in database
         try:
-            existing_user = mongo.db.users.find_one(
+            existing_user = users_collection.find_one(
                 {
                     "$or": [
                         {"username": username},
@@ -205,7 +211,7 @@ def signup_route():
                 "phone_number": phone_number,
                 "password": hashed_password,
             }
-            inserted_user = mongo.db.users.insert_one(new_user)
+            inserted_user = users_collection.insert_one(new_user)
             if not inserted_user:
                 flash(
                     "An error occurred while creating your account. Please try again.",
@@ -231,3 +237,48 @@ def signup_route():
             return render_template("pages/signup.html", user=get_user_data(session))
 
     return render_template("pages/signup.html", user=get_user_data(session))
+
+
+@blueprint.route("/learn-more")
+def learn_more_route():
+    """
+    This function generates learn more page.
+
+    Args:
+    None
+
+    Returns:
+    Renders learn more page.
+    """
+
+    return render_template("pages/learn_more.html", user=get_user_data(session))
+
+
+@blueprint.route("/policy/<string:policy_name>")
+def policy_route(policy_name):
+    """
+    This function routes to various policies.
+
+    Args:
+    policy_name: string argument consisting of policy name
+
+    Returns:
+    Renders respective policy page.
+    """
+
+    return render_template(f"policies/{policy_name}.html", user=get_user_data(session))
+
+
+@blueprint.route("/credits")
+def credits_route():
+    """
+    This function generates credits page.
+
+    Args:
+    None
+
+    Returns:
+    Renders credits page.
+    """
+
+    return render_template("pages/credits.html", user=get_user_data(session))

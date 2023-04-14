@@ -1,36 +1,43 @@
-from flask import Flask, session
-from flask_pymongo import PyMongo
-from dotenv import load_dotenv
-import os
-import requests
+"""
+(C) Zach Lagden 2023 All Rights Reserved.
+This code may not be used, copied, distributed, or reproduced in part or in whole
+for commercial or personal purposes without the express written consent of the owner. 
+"""
 
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+import os
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
 load_dotenv()
 
 # MongoDB Connection
-app.config["MONGO_URI"] = os.getenv("MONGODB_URI")
-mongo = PyMongo(app)
-users_collection = mongo.db.users
-settings_collection = mongo.db.settings
-user_information_collection = mongo.db.user_information
+client = MongoClient(os.getenv("mongodb"), connect=False)
+user_data_db = client["user_data"]
+users_collection = user_data_db["users"]
+settings_collection = user_data_db["settings"]
+user_information_collection = user_data_db["user_information"]
 
 # reCAPTCHA Secret Key
-RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
+RECAPTCHA_SECRET_KEY = os.getenv("recaptcha_secret_key")
 
 
-def get_user_data():
+def get_user_data(route_session):
     """
     This function returns user data if user exists else None.
+
+    Args:
+    route_session: session object
 
     Returns:
     dictionary consisting of user data
     """
 
-    if "user" not in session:
+    if "user" not in route_session:
         return None
 
-    found_user = users_collection.find_one({"username": session["user"]["username"]})
+    found_user = users_collection.find_one(
+        {"username": route_session["user"]["username"]}
+    )
 
     return {
         "uuid": str(found_user["_id"]),

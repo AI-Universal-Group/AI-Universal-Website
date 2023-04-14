@@ -10,8 +10,8 @@ import openai
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, flash, url_for
 from flask_minify import Minify
-from flask_pymongo import PyMongo
 from flask_restful import Api
+from pymongo import MongoClient
 from flask_session import Session
 
 from internal.helpers import get_user_data
@@ -45,10 +45,16 @@ app.config.from_mapping(flask_config)
 # Flask Extensions
 Session(app)
 api = Api(app)
-mongo = PyMongo(app)
 
 # Minifying HTML, CSS and JS files
 Minify(app=app, html=True, js=True, cssless=True)
+
+# MongoDB Connection
+client = MongoClient(os.getenv("mongodb"), connect=False)
+user_data_db = client["user_data"]
+users_collection = user_data_db["users"]
+settings_collection = user_data_db["settings"]
+user_information_collection = user_data_db["user_information"]
 
 
 @app.route("/ai")
@@ -73,7 +79,7 @@ def ai_test_route():
     )
 
 
-api.add_resource(users.user_management_resource(mongo), "/api/v1/user")
+api.add_resource(users.user_management_resource(), "/api/v1/user")
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
