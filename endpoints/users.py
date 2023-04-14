@@ -5,23 +5,21 @@ for commercial or personal purposes without the express written consent of the o
 """
 
 import hashlib
-import os
 
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import jsonify, make_response, request, session
-from flask_restful import Resource, reqparse
-from pymongo import MongoClient
+from flask import Flask, jsonify, make_response, request, session
+from flask_restful import Resource, Api, reqparse
+from flask_pymongo import PyMongo
 
 load_dotenv()
 
-client = MongoClient(os.getenv("mongodb"), connect=False)
-user_data_db = client["user_data"]
-users_collection = user_data_db["users"]
-settings_collection = user_data_db["settings"]
-user_information_collection = user_data_db["user_information"]
+app = Flask(__name__)
+app.config["MONGO_URI"] = os.getenv("mongodb")
 
-users_collection.create_index("username", unique=True)
+mongo = PyMongo(app)
+
+api = Api(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument("username", type=str)
@@ -109,7 +107,7 @@ class UserManagement(Resource):
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        found_user = users_collection.find_one(
+        found_user = mongo.db.users.find_one(
             {"username": username, "password": hashed_password}
         )
 
@@ -149,7 +147,7 @@ class UserManagement(Resource):
 
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-        existing_user = users_collection.find_one(
+        existing_user = mongo.db.users.find_one(
             {
                 "$or": [
                     {"username": username},
@@ -178,7 +176,7 @@ class UserManagement(Resource):
             "email": email,
         }
 
-        result = users_collection.insert_one(new_user)
+        result = mongo.db.users.insert_one(new_user)
         session["user"] = {
             "uuid": str(result.inserted_id),
             "username": username,
@@ -209,7 +207,7 @@ class UserManagement(Resource):
             return response
 
         uid = ObjectId(session_user["uuid"])
-        user_info = users_collection.find_one({"_id": uid})
+        user_info = mongo.db.users.find_one({"_id": uid})
         stored_password = user_info["password"]
 
         if not any([new_username, new_password]):
@@ -254,7 +252,7 @@ class UserManagement(Resource):
             hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
             update_query["password"] = hashed_password
 
-        users_collection.update_one({"_id": uid}, {"$set": update_query})
+        mongo.db.users.update_one({"_id": uid}, {"$set": update_query})
 
         session_user.update(update_query)
         session["user"] = session_user
@@ -278,7 +276,7 @@ class UserManagement(Resource):
             return response
 
         uid = ObjectId(session_user["uuid"])
-        users_collection.delete_one({"_id": uid})
+        mongo.db.users.delete_one({"_id": uid})
         session.pop("user", None)
 
         response = make_response(
