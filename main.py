@@ -7,15 +7,17 @@ for commercial or personal purposes without the express written consent of the o
 import os
 
 import openai
+from bson.objectid import ObjectId
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, request, session, flash, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask_discord import DiscordOAuth2Session, Unauthorized, requires_authorization
 from flask_minify import Minify
 from flask_restful import Api
-from pymongo import MongoClient
-from flask_session import Session
 
+from endpoints import app_routes, main_routes, settings_routes, users
+from flask_session import Session
+from internal.database import users_collection
 from internal.helpers import get_user_data
-from endpoints import users, app_routes, main_routes, settings_routes
 
 load_dotenv()
 
@@ -39,7 +41,14 @@ app.register_blueprint(settings_routes.blueprint)
 flask_config = {
     "SESSION_COOKIE_NAME": "wrld",
     "SESSION_TYPE": "filesystem",
+    "DISCORD_CLIENT_ID": os.getenv("DISCORD_CLIENT_ID"),
+    "DISCORD_CLIENT_SECRET": os.getenv("DISCORD_CLIENT_SECRET"),
+    "DISCORD_REDIRECT_URI": os.getenv("DISCORD_REDIRECT_URI"),
+    "DISCORD_BOT_TOKEN": os.getenv("DISCORD_BOT_TOKEN"),
+    "DISCORD_GUILD_ID": os.getenv("DISCORD_GUILD_ID"),
+    "DISCORD_GUILD_INVITE": os.getenv("DISCORD_GUILD_INVITE"),
 }
+app.secret_key = os.getenv("flask_secret")
 app.config.from_mapping(flask_config)
 
 # Flask Extensions
@@ -49,37 +58,73 @@ api = Api(app)
 # Minifying HTML, CSS and JS files
 Minify(app=app, html=True, js=True, cssless=True)
 
-# MongoDB Connection
-client = MongoClient(os.getenv("mongodb"), connect=False)
-user_data_db = client["user_data"]
-users_collection = user_data_db["users"]
-settings_collection = user_data_db["settings"]
-user_information_collection = user_data_db["user_information"]
+# Discord Routes
+
+discord = DiscordOAuth2Session(app)
 
 
-@app.route("/ai")
-def ai_test_route():
-    """
-    This function generates page for AI testing.
-
-    Args:
-    None
-
-    Returns:
-    Renders page for AI testing.
-    """
-
-    if "user" not in session:
-        return redirect("/")
-
-    return render_template(
-        "pages/ai.html",
-        user=get_user_data(session),
-        user_data={"credits": 69, "subscription_data": "Valid Subscription"},
-    )
+@app.route("/discord/login")
+def discord_login_route():
+    return discord.create_session()
 
 
+@app.route("/discord/callback")
+def discord_callback_route():
+    discord.callback()
+    return redirect(url_for("discord_link_route"))
+
+
+@app.errorhandler(Unauthorized)
+def discord_redirect_unauthorized(e):
+    return redirect(url_for("discord_login_route"))
+
+
+@app.route("/discord/link")
+@requires_authorization
+def discord_link_route():
+    user = get_user_data(session)
+    discord_user = discord.fetch_user()
+
+    if not user:
+        return render_template(
+            "pages/discord/link.html", not_logged_in=True, discord_user=discord_user
+        )
+
+    if "discord_id" in user:
+        return render_template(
+            "pages/discord/link.html", already_linked=True, discord_user=discord_user
+        )
+    else:
+        users_collection.update_one(
+            {"_id": ObjectId(user["uuid"])},
+            {"$set": {"discord_id": str(discord_user.id)}},
+        )
+
+        guild_id = app.config["DISCORD_GUILD_ID"]
+        response = discord_user.add_to_guild(guild_id)
+
+        if response:
+            join_success = True
+        elif response == {}:
+            join_success = None
+        else:
+            join_success = False
+
+        return render_template(
+            "pages/discord/link.html",
+            link_success=True,
+            join_success=join_success,
+            discord_user=discord_user,
+            discord_guild_invite=app.config["DISCORD_GUILD_INVITE"],
+        )
+
+
+# Define API routes
 api.add_resource(users.user_management_resource(), "/api/v1/user")
 
+# Run if running as a script
 if __name__ == "__main__":
+    os.environ[
+        "OAUTHLIB_INSECURE_TRANSPORT"
+    ] = "true"  #! Only in development environment.
     app.run(port=5000, debug=True)

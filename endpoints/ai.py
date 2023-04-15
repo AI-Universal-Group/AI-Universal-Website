@@ -11,15 +11,9 @@ from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from flask import session
 from flask_restful import Resource, reqparse
-from pymongo import MongoClient
+from .helpers import users_collection
 
 load_dotenv()
-
-client = MongoClient(os.getenv("mongodb"), connect=False)
-user_data_db = client["user_data"]
-users_collection = user_data_db["users"]
-settings_collection = user_data_db["settings"]
-user_information_collection = user_data_db["user_information"]
 
 users_collection.create_index("username", unique=True)
 

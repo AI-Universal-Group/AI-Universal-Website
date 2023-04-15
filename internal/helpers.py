@@ -5,17 +5,13 @@ for commercial or personal purposes without the express written consent of the o
 """
 
 import os
+
+import requests
 from dotenv import load_dotenv
-from pymongo import MongoClient
+
+from .database import users_collection
 
 load_dotenv()
-
-# MongoDB Connection
-client = MongoClient(os.getenv("mongodb"), connect=False)
-user_data_db = client["user_data"]
-users_collection = user_data_db["users"]
-settings_collection = user_data_db["settings"]
-user_information_collection = user_data_db["user_information"]
 
 # reCAPTCHA Secret Key
 RECAPTCHA_SECRET_KEY = os.getenv("recaptcha_secret_key")
