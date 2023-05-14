@@ -3,10 +3,9 @@
 {% block title %}Learn More{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
-    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="{{ url_for('static', filename='css/learn_more.css') }}" />
+{% assets 'learn_more_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body %}
@@ -31,24 +30,21 @@
         <h2 class="text-3xl font-bold mb-6">Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Feature 1 -->
-            <div class="feature bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
+            <div class="feature bg-gray-100 p-6 rounded-lg">
                 <h3 class="text-2xl font-bold mb-4">Accessibility</h3>
                 <p>Our AI solutions are designed for users of all skill levels. Whether you are a student, a
                     professional, or a business owner, our platform offers a wide range of tools and services to meet
                     your needs.</p>
             </div>
             <!-- Feature 2 -->
-            <div class="feature bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
+            <div class="feature bg-gray-100 p-6 rounded-lg">
                 <h3 class="text-2xl font-bold mb-4">Innovation</h3>
                 <p>Our team constantly strives to push the boundaries of AI technology. We are committed to staying at
                     the forefront of AI research and development, ensuring that our users have access to the latest and
                     most advanced tools available.</p>
             </div>
             <!-- Feature 3 -->
-            <div class="feature bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
+            <div class="feature bg-gray-100 p-6 rounded-lg">
                 <h3 class="text-2xl font-bold mb-4">Security and Privacy</h3>
                 <p>We take data security and privacy very seriously. Our platform employs industry-leading security
                     measures and encryption methods to protect your data and ensure your privacy. We are also fully
@@ -101,14 +97,13 @@
             your work, study, or business.</p>
         <button
             class="bg-gradient-to-r from-blue-700 to-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onclick="location.href='/onboarding'">Get Started</button>
+            onclick="location.href='/signup'">Get Started</button>
     </div>
 </section>
 {% endblock %}
 
 {% block js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
-    integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ url_for('static', filename='js/learn_more.js') }}"></script>
+{% assets 'learn_more_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}

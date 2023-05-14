@@ -4,10 +4,10 @@ This code may not be used, copied, distributed, or reproduced in part or in whol
 for commercial or personal purposes without the express written consent of the owner. 
 """
 
-from .database import (
-    users_collection,
-    settings_collection,
-    logins_collection,
-    signups_collection,
-    page_loads_collection,
-)
+import os
+from dotenv import load_dotenv
+from pymongo import MongoClient
+
+load_dotenv()
+
+client = MongoClient(os.getenv("mongodb"), connect=False)

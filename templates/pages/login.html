@@ -3,10 +3,9 @@
 {% block title %}Login{% endblock %}
 
 {% block head %}
-<script>
-    render = "{{ render }}"
-</script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/login-signup.css') }}">
+{% assets 'login_signup_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body %}
@@ -55,5 +54,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ url_for('static', filename='js/login-signup.js') }}"></script>
+{% assets 'login_signup_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}

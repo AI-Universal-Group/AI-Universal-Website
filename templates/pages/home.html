@@ -3,71 +3,62 @@
 {% block title %}Home{% endblock %}
 
 {% block head %}
-<!-- Owl Carousel 2 CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
-    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+{% assets 'home_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body %}
-<!-- Owl Carousel 2 JS -->
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
-    integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <!-- Introduction -->
-<section class="bg-white text-gray-900 py-20 border-b border-gray-300">
+<section id="introduction" class="bg-white text-gray-900 py-20 border-b border-gray-300 relative">
     <div class="container mx-auto px-4">
-        <h1 class="text-4xl font-bold mb-6">Welcome to AI Universal</h1>
-        <p class="text-lg mb-8">AI Universal is an AI-based business that aims to provide easy-to-use and accessible AI
-            technology to users around the world. Our mission is to remove the confusion around AI and allow everyone to
-            use it for good. We provide users with a platform for learning, mental support, and more, making AI
-            technology accessible to a wide audience.</p>
-        <button
-            class="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onclick="location.href='/signup'">Get Started</button>
-        <button
-            class="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onclick="location.href='/learn-more'">Learn More</button>
-
+        <div class="section-bg welcome-bg"></div>
+        <div class="welcome-content relative z-10 bg-opacity-60 rounded-lg bg-gray-700 p-6">
+            <h1 class="text-4xl font-bold mb-6 text-gray-100">Welcome to AI Universal</h1>
+            <p class="text-lg mb-8 text-gray-100">AI Universal is an AI-based business that aims to provide easy-to-use
+                and accessible
+                AI technology to users around the world. Our mission is to remove the confusion around AI and allow
+                everyone to use it for good. We provide users with a platform
+                for tutoring, learning, homework, and more, making AI technology accessible to a wide audience.</p>
+            <button
+                class="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onclick="location.href='/signup'">Get Started</button>
+            <button
+                class="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onclick="location.href='/learn-more'">Learn More</button>
+        </div>
     </div>
 </section>
 
 <!-- Example Usage -->
-<section class="bg-white text-gray-900 py-20 border-b border-gray-300">
+<section class="bg-white text-gray-900 py-10 mx-10 border-b border-gray-300">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-6">Example Usage</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Example 1 -->
-            <div class="example-usage bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
+            <div class="example-usage bg-gray-100 p-6 rounded-lg">
                 <h3 class="text-2xl font-bold mb-4">Homework Assignments</h3>
-                <p>Generate custom prompts for homework assignments, helping students learn and understand topics with
-                    ease.</p>
+                <p>Generate custom prompts for homework assignments, helping students learn and understand topics
+                    with ease.</p>
             </div>
             <!-- Example 2 -->
-            <div class="example-usage bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
+            <div class="example-usage bg-gray-100 p-6 rounded-lg">
                 <h3 class="text-2xl font-bold mb-4">Learning New Things</h3>
                 <p>Discover new information and expand your knowledge on various subjects with the help of our AI
                     assistant.</p>
             </div>
             <!-- Example 3 -->
-            <div class="example-usage bg-gray-100 p-6 rounded-lg" data-aos="fade-up" data-aos-duration="1000"
-                data-aos-once="true">
-                <h3 class="text-2xl font-bold mb-4">Mental Support</h3>
-                <p>Receive mental support and guidance from our AI companion whenever you need someone to talk to.</p>
+            <div class="example-usage bg-gray-100 p-6 rounded-lg">
+                <h3 class="text-2xl font-bold mb-4">Business Insights</h3>
+                <p>Gain a competitive edge in your industry by using our AI-based platform that provides valuable
+                    insights and recommendations by analyzing market trends and customer behavior.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Testimonials -->
-<section class="bg-white text-gray-900 py-20 border-b border-gray-300">
+<section class="bg-white text-gray-900 py-10 mx-10">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold mb-6">Testimonials</h2>
         <div class="owl-carousel owl-theme">
@@ -78,10 +69,10 @@
                 <p class="testimonial-position">Student</p>
             </div>
             <div class="testimonial-item gradient-2">
-                <p class="testimonial-text">"The mental support AI has been incredibly helpful in times of need. It's
-                    amazing to have a non-judgmental conversation partner."</p>
+                <p class="testimonial-text">"The AI system has been incredibly helpful in providing us with valuable
+                    insights and recommendations that we would have never considered before."</p>
                 <h4 class="testimonial-name">John Smith</h4>
-                <p class="testimonial-position">Freelancer</p>
+                <p class="testimonial-position">Marketing Manager</p>
             </div>
             <div class="testimonial-item gradient-3">
                 <p class="testimonial-text">"I have been using AI Universal to learn new skills and it has been an
@@ -106,8 +97,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
-    integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% assets 'home_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}

@@ -13,19 +13,43 @@ from pymongo import MongoClient
 load_dotenv()
 
 client = MongoClient(os.getenv("mongodb"), connect=False)
-user_data_db = client["user_data"]
+
+# Databases
+
+"""
+Database for storing site data such as user accounts, user settings, site logs, errors, etc.
+"""
+site_data_db = client["site_data"]
+
+"""
+Database for storing user logs such as logins and signups.
+Data includes ip addresses, times, etc.
+"""
+user_logs_db = client["user_logs"]
+
+# Collections
 
 """
 Collection for storing user data such as username and password.
 """
-users_collection = user_data_db["users"]
+users_collection = site_data_db["users"]
 
 """
 Collection for storing user settings such as theme and language preferences.
 """
-settings_collection = user_data_db["settings"]
+settings_collection = site_data_db["settings"]
 
 """
-Collection for storing additional user information such as name, email, and phone number.
+Collection for storing page load logs
 """
-user_information_collection = user_data_db["user_information"]
+page_loads_collection = site_data_db["page_loads"]
+
+"""
+Collection for storing user logins such as times and ip addresses.
+"""
+logins_collection = user_logs_db["logins"]
+
+"""
+Collection for storing user signups such as times and ip addresses.
+"""
+signups_collection = user_logs_db["signups"]

@@ -3,7 +3,9 @@
 {% block title %}Onboarding{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}" />
+{% assets 'onboarding_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body %}
@@ -92,5 +94,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% assets 'onboarding_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}

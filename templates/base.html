@@ -14,15 +14,14 @@
         })(window, document, 'script', 'dataLayer', 'GTM-MW6SP46');
     </script>
     <!-- End Google Tag Manager -->
+    <script src="https://cdn.tailwindcss.com/"></script>
     <meta charset="UTF-8" />
     <title>{% block title %}{% endblock %} - AI Universal</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     {% block head %}{% endblock %}
 </head>
 
@@ -31,6 +30,13 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MW6SP46" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <div id="full-loader" class="overlay hidden">
+        <div class="spinner"></div>
+    </div>
+    <div id="top-loader" class="progress-bar">
+        <div class="progress"></div>
+    </div>
 
     <div id="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -63,10 +69,10 @@
         </div>
         <div class="flex-auto">
             <ul class="flex mx-auto">
-                <li class="mr-4"><a href="#" class="hover:text-blue-600">Home</a></li>
-                <li class="mr-4"><a href="#" class="hover:text-blue-600">News</a></li>
-                <li class="mr-4"><a href="#" class="hover:text-blue-600">Contact</a></li>
-                <li class="mr-4"><a href="#" class="hover:text-blue-600">About</a></li>
+                <li class="mr-4"><a href="/" class="hover:text-blue-600">Home</a></li>
+                <li class="mr-4"><a href="/news" class="hover:text-blue-600">News</a></li>
+                <li class="mr-4"><a href="/businesses" class="hover:text-blue-600">Businesses</a></li>
+                <li class="mr-4"><a href="/about" class="hover:text-blue-600">About</a></li>
             </ul>
         </div>
         <div class="flex items-center">
@@ -128,14 +134,7 @@
         <i class="fas fa-chevron-up text-white"></i>
     </button>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
-    integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js"
-    integrity="sha512-HaoDYc3PGduguBWOSToNc0AWGHBi2Y432Ssp3wNIdlOzrunCtB2qq6FrhtPbo+PlbvRbyi86dr5VQx61eg/daQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://www.google.com/recaptcha/api.js?render=6LcglHklAAAAAHByD3vbfkrdYzOMsz13SE9-ic1d"></script>
-<script src="{{ url_for('static', filename='js/base.js') }}"></script>
 {% block js %}{% endblock %}
 
 </html>

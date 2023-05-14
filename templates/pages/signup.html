@@ -3,12 +3,11 @@
 {% block title %}Login{% endblock %}
 
 {% block head %}
-
-<script>
-    render = "{{ render }}"
-</script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/login-signup.css') }}">
+{% assets 'login_signup_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
+
 {% block body %}
 
 <div id="main-container" class="bg">
@@ -54,6 +53,13 @@
                             Signup
                         </button>
                     </div>
+                    <!-- policy message -->
+                    <div class="mt-2">
+                        <p class="text-xs text-gray-600">By signing up, you agree to our <a
+                                href="/policy/terms_of_service" class="text-blue-600">terms of service</a>, <a
+                                href="/policy/privacy" class="text-blue-600">privacy policy</a> and <a
+                                href="/policy/cookies" class="text-blue-600">cookie policy</a>.</p>
+                    </div>
                 </form>
             </div>
             <div class="text-center mt-4 bg-white shadow-lg rounded-lg p-2">
@@ -68,5 +74,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ url_for('static', filename='js/login-signup.js') }}"></script>
+{% assets 'login_signup_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}

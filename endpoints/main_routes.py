@@ -7,6 +7,8 @@ for commercial or personal purposes without the express written consent of the o
 import os
 import requests
 import hashlib
+import json
+import datetime
 
 from dotenv import load_dotenv
 from flask import (
@@ -18,7 +20,7 @@ from flask import (
     session,
     url_for,
 )
-from .helpers import users_collection
+from .helpers import users_collection, signups_collection, logins_collection
 
 load_dotenv()
 
@@ -54,6 +56,21 @@ def get_user_data(route_session):
         "email": found_user["email"],
         "phone_number": found_user["phone_number"],
     }
+
+
+def get_client_ip(request):
+    """
+    Get the client's IP address from the request object.
+
+    Args:
+    request: request object
+
+    Returns:
+    string consisting of the client's IP address
+    """
+    if "X-Forwarded-For" in request.headers:
+        return request.headers["X-Forwarded-For"].split(",")[0].strip()
+    return request.remote_addr
 
 
 def verify_recaptcha(response):
@@ -139,6 +156,16 @@ def login_route():
                 "phone_number": found_user["phone_number"],
             }
 
+            # Log login data
+            ip_address = get_client_ip(request)
+            logins_collection.insert_one(
+                {
+                    "user_id": str(found_user["_id"]),
+                    "ip_address": ip_address,
+                    "timestamp": datetime.datetime.utcnow(),
+                }
+            )
+
             # Redirect to homepage on successful login
             return redirect(url_for("main_routes.home_route"))
 
@@ -212,15 +239,30 @@ def signup_route():
                 )
                 return render_template("pages/signup.html", user=get_user_data(session))
 
-            # Login user and redirect to homepage
-            session["user"] = {
-                "uuid": str(inserted_user.inserted_id),
-                "username": username,
-                "email": email,
-                "phone_number": phone_number,
-            }
-            flash("Your account has been created successfully!", "info")
-            return redirect(url_for("app_routes.onboarding_route"))
+            else:
+                # Login user and redirect to homepage
+                session["user"] = {
+                    "uuid": str(inserted_user.inserted_id),
+                    "username": username,
+                    "email": email,
+                    "phone_number": phone_number,
+                }
+
+                # Log signup data
+                ip_address = get_client_ip(request)
+                response = requests.get(f"http://ip-api.com/json/{ip_address}")
+                region_data = response.json()
+                signups_collection.insert_one(
+                    {
+                        "user_id": str(inserted_user.inserted_id),
+                        "ip_address": ip_address,
+                        "timestamp": datetime.datetime.utcnow(),
+                        "region_data": json.dumps(region_data),
+                    }
+                )
+
+                flash("Your account has been created successfully!", "info")
+                return redirect(url_for("app_routes.onboarding_route"))
 
         except Exception as e:
             flash(

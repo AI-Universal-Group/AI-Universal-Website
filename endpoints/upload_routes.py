@@ -5,19 +5,12 @@ for commercial or personal purposes without the express written consent of the o
 """
 
 import os
-import requests
-import hashlib
 
+import requests
 from dotenv import load_dotenv
-from flask import (
-    Blueprint,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from werkzeug.utils import secure_filename
+
 from .helpers import users_collection
 
 load_dotenv()
@@ -25,7 +18,13 @@ load_dotenv()
 # reCAPTCHA Secret Key
 RECAPTCHA_SECRET_KEY = os.getenv("recaptcha_secret_key")
 
-blueprint = Blueprint("app_routes", __name__, url_prefix="/app")
+# Upload Folder
+
+UPLOAD_FOLDER = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "uploads/images"
+)
+
+blueprint = Blueprint("upload_routes", __name__, url_prefix="/upload")
 
 
 # Helper Functions
@@ -76,37 +75,28 @@ def verify_recaptcha(response):
     return response.json().get("success", False)
 
 
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in {
+        "png",
+        "jpg",
+        "jpeg",
+        "pdf",
+    }
+
+
 # Routes
 
 
-@blueprint.route("/")
-def app_route():
-    """
-    This function generates app page.
+@blueprint.route("/upload", methods=["POST"])
+def upload_file():
+    uploaded_file = request.files["file"]
+    if uploaded_file.filename == "":
+        return "No file selected!"
 
-    Args:
-    None
+    if not allowed_file(uploaded_file.filename):
+        return "Invalid file type!"
 
-    Returns:
-    Renders app page.
-    """
+    filename = secure_filename(uploaded_file.filename)
+    uploaded_file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-    return "The app, eventually."
-
-
-@blueprint.route("/onboarding")
-def onboarding_route():
-    """
-    This function generates onboarding page.
-
-    Args:
-    None
-
-    Returns:
-    Renders onboarding page.
-    """
-
-    if "user" not in session:
-        return redirect(url_for("main_routes.login_route"))
-
-    return render_template("pages/onboarding.html", user=get_user_data(session))
+    return "File successfully uploaded!"

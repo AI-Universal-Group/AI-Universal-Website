@@ -27,6 +27,11 @@ footer {
     flex-shrink: 0;
 }
 
+/* By default, hides the grecaptcha badge */
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
 /* Styles for the back-to-top button that isn't displayed by default */
 #backToTopBtn {
     /* display:none; */
@@ -49,6 +54,90 @@ footer {
 /* Changes the opacity of the back-to-top button on hover */
 #backToTopBtn:hover {
     opacity: 1;
+}
+
+/* Loader */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    overflow: hidden;
+    z-index: 9999;
+    display: none;
+}
+
+.progress {
+    height: 100%;
+    width: 100%;
+    background-color: #00b3ff;
+    transform: translateX(-100%);
+}
+
+.hidden {
+    display: none;
+}
+
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Styles for the sections with image backgrounds */
+
+.welcome-bg {
+    background-image: url('https://cdn.discordapp.com/attachments/1096391777835024394/1103972942905364550/Zach3_abstract_digital_landscape_that_represents_futuristic_tec_b06c2a82-66f2-40d0-ab19-b2fad516b824.png');
+}
+
+.section-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* Styles for flash messages */

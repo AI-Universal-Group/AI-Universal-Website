@@ -3,7 +3,9 @@
 {% block title %}Credits{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/credits.css') }}">
+{% assets 'credits_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body %}
@@ -21,6 +23,8 @@
                 <p>Zach is a co-founder, co-owner, and the lead developer at AI Universal. He is responsible for the
                     platform's overall architecture and development, and directs the company as a whole. Zach is
                     involved in nearly every aspect of the business.</p>
+                <p class="hidden">Zach actually runs the whole business and has enslaved the rest of the staff, muah
+                    haha. No but seriously we love all our staff and we appreciate all of their important work.</p>
             </div>
             <div class="owner-card bg-gray-100 p-6 rounded-lg">
                 <img src="{{ url_for('static', filename='images/credits_austin.jpg') }}" alt="Developer 2"
@@ -117,4 +121,7 @@
 {% endblock %}
 
 {% block js %}
+{% assets 'credits_js' %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 {% endblock %}
