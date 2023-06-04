@@ -26,7 +26,7 @@ def settings_route():
     if "user" not in session:
         return redirect(url_for("main_routes.home_route"))
 
-    return render_template("pages/settings/account.html", user=user)
+    return render_template("app/settings/account.html", user=user)
 
 
 @blueprint.route("subscription")
@@ -42,7 +42,7 @@ def settings_subscription_route():
             "credit": 100.00,
         },
     }
-    return render_template("pages/settings/subscription.html", user=user)
+    return render_template("app/settings/subscription.html", user=user)
 
 
 @blueprint.route("/advanced")
@@ -58,4 +58,4 @@ def settings_advanced_route():
             "credit": 100.00,
         },
     }
-    return render_template("pages/settings/advanced.html", user=user)
+    return render_template("app/settings/advanced.html", user=user)

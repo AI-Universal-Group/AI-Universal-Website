@@ -1,7 +1,3 @@
-.container {
-    max-width: 1280px;
-}
-
 /* Gradients for example usage boxes */
 .example-usage:nth-child(1) {
     background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);

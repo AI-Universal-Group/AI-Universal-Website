@@ -107,7 +107,7 @@ def home_route():
     Renders homepage.
     """
 
-    return render_template("pages/home.html", user=get_user_data(session))
+    return render_template("landing/home.html", user=get_user_data(session))
 
 
 @blueprint.route("/login", methods=["GET", "POST"])
@@ -171,7 +171,7 @@ def login_route():
 
         flash("Invalid username or password.", "error")
 
-    return render_template("pages/login.html", user=get_user_data(session))
+    return render_template("landing/login.html", user=get_user_data(session))
 
 
 @blueprint.route("/signup", methods=["GET", "POST"])
@@ -195,7 +195,7 @@ def signup_route():
         if not verify_recaptcha(request.form.get("g-recaptcha-response")):
             # reCAPTCHA verification failed
             flash("reCAPTCHA verification failed. Please try again.", "error")
-            return render_template("pages/signup.html", user=get_user_data(session))
+            return render_template("landing/signup.html", user=get_user_data(session))
 
         # Validate form data
         username = request.form.get("username")
@@ -205,7 +205,7 @@ def signup_route():
 
         if not all([username, email, phone_number, password]):
             flash("All fields are required.", "error")
-            return render_template("pages/signup.html", user=get_user_data(session))
+            return render_template("landing/signup.html", user=get_user_data(session))
 
         # Hash password
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -223,7 +223,9 @@ def signup_route():
             )
             if existing_user:
                 flash("Username or email is already taken.", "error")
-                return render_template("pages/signup.html", user=get_user_data(session))
+                return render_template(
+                    "landing/signup.html", user=get_user_data(session)
+                )
 
             new_user = {
                 "username": username,
@@ -237,7 +239,9 @@ def signup_route():
                     "An error occurred while creating your account. Please try again.",
                     "error",
                 )
-                return render_template("pages/signup.html", user=get_user_data(session))
+                return render_template(
+                    "landing/signup.html", user=get_user_data(session)
+                )
 
             else:
                 # Login user and redirect to homepage
@@ -269,9 +273,9 @@ def signup_route():
                 f"An error occurred while creating your account. Error message: {str(e)}",
                 "error",
             )
-            return render_template("pages/signup.html", user=get_user_data(session))
+            return render_template("landing/signup.html", user=get_user_data(session))
 
-    return render_template("pages/signup.html", user=get_user_data(session))
+    return render_template("landing/signup.html", user=get_user_data(session))
 
 
 @blueprint.route("/learn-more")
@@ -286,7 +290,7 @@ def learn_more_route():
     Renders learn more page.
     """
 
-    return render_template("pages/learn_more.html", user=get_user_data(session))
+    return render_template("landing/learn_more.html", user=get_user_data(session))
 
 
 @blueprint.route("/policy/<string:policy_name>")
@@ -301,7 +305,14 @@ def policy_route(policy_name):
     Renders respective policy page.
     """
 
-    return render_template(f"policies/{policy_name}.html", user=get_user_data(session))
+    allowed_urls = ["cookies", "privacy", "terms_of_service"]
+
+    if policy_name not in allowed_urls:
+        return "404 - Page not found", 404  # TODO: create 404 page
+
+    return render_template(
+        f"landing/policies/{policy_name}.html", user=get_user_data(session)
+    )
 
 
 @blueprint.route("/credits")
@@ -316,4 +327,4 @@ def credits_route():
     Renders credits page.
     """
 
-    return render_template("pages/credits.html", user=get_user_data(session))
+    return render_template("landing/credits.html", user=get_user_data(session))

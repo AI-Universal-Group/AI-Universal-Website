@@ -42,13 +42,15 @@ app.register_blueprint(settings_routes.blueprint)
 flask_config = {
     "MAX_CONTENT_LENGTH": 10 * 1024 * 1024,  # 10mb
     "CACHE": True,  # Set flask asset cacheing to True
-    "SESSION_COOKIE_NAME": "wrld",
-    "SESSION_PERMANENT": False,
-    "SESSION_TYPE": "mongodb",
-    "SESSION_MONGODB": client,
-    "SESSION_MONGODB_DB": "site_data",
-    "SESSION_MONGODB_COLLECTION": "sessions",
-    "DISCORD_CLIENT_ID": os.getenv("DISCORD_CLIENT_ID"),
+    "SESSION_COOKIE_NAME": "wrld",  # name of the cookie used to store the session uuid
+    "SESSION_PERMANENT": False,  # Whether or not the session is permanent
+    "SESSION_TYPE": "mongodb",  # How the session data is stored
+    "SESSION_MONGODB": client,  # The mongodb connection object
+    "SESSION_MONGODB_DB": "site_data",  # The database to store the session data
+    "SESSION_MONGODB_COLLECTION": "sessions",  # The collection to store the session data
+    "DISCORD_CLIENT_ID": os.getenv(
+        "DISCORD_CLIENT_ID"
+    ),  # The application client identifier for Oauth2
     "DISCORD_CLIENT_SECRET": os.getenv("DISCORD_CLIENT_SECRET"),
     "DISCORD_REDIRECT_URI": os.getenv("DISCORD_REDIRECT_URI"),
     "DISCORD_BOT_TOKEN": os.getenv("DISCORD_BOT_TOKEN"),
@@ -127,12 +129,12 @@ def discord_link_route():
 
     if not user:
         return render_template(
-            "pages/discord/link.html", not_logged_in=True, discord_user=discord_user
+            "landing/discord/link.html", not_logged_in=True, discord_user=discord_user
         )
 
     if "discord_id" in user:
         return render_template(
-            "pages/discord/link.html", already_linked=True, discord_user=discord_user
+            "landing/discord/link.html", already_linked=True, discord_user=discord_user
         )
     users_collection.update_one(
         {"_id": ObjectId(user["uuid"])},
@@ -143,14 +145,14 @@ def discord_link_route():
     response = discord_user.add_to_guild(guild_id)
 
     if response:
-        join_success = True
+        join_success = True  # Successfully joined
     elif response == {}:
-        join_success = None
+        join_success = None  # Probably Already Joined
     else:
-        join_success = False
+        join_success = False  # Unsuccessful joining
 
     return render_template(
-        "pages/discord/link.html",
+        "landing/discord/link.html",
         link_success=True,
         join_success=join_success,
         discord_user=discord_user,
@@ -169,12 +171,12 @@ def discord_unlink_route():
 
     if not user:
         return render_template(
-            "pages/discord/unlink.html", not_logged_in=True, discord_user=discord_user
+            "landing/discord/unlink.html", not_logged_in=True, discord_user=discord_user
         )
 
     if "discord_id" not in user:
         return render_template(
-            "pages/discord/unlink.html", not_linked=True, discord_user=discord_user
+            "landing/discord/unlink.html", not_linked=True, discord_user=discord_user
         )
     users_collection.update_one(
         {"_id": ObjectId(user["uuid"])},
@@ -182,7 +184,7 @@ def discord_unlink_route():
     )
 
     return render_template(
-        "pages/discord/unlink.html",
+        "landing/discord/unlink.html",
         unlink_success=True,
         discord_user=discord_user,
     )

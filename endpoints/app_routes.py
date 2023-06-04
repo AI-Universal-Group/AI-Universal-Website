@@ -109,4 +109,4 @@ def onboarding_route():
     if "user" not in session:
         return redirect(url_for("main_routes.login_route"))
 
-    return render_template("pages/onboarding.html", user=get_user_data(session))
+    return render_template("landing/onboarding.html", user=get_user_data(session))
